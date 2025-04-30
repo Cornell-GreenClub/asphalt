@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import PlacesAutocomplete from './PlacesAutocomplete';
 import Navbar from '../components/Navbar';
@@ -111,6 +111,11 @@ const ExplorePage = () => {
     vehicleNumber: '',
   });
 
+  //debug whenever formData.stops updates
+  useEffect(() => {
+    console.log("Updated stops:", formData.stops);
+  }, [formData.stops]); // Runs whenever `stops` changes
+
   const [route, setRoute] = useState(null);
   const [isMapView, setIsMapView] = useState(false);
 
@@ -217,6 +222,39 @@ const ExplorePage = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+
+    // Send the stops to the Flask backend to reorder them
+    //chatgpt code TODO: change later
+    try {
+      console.log("Are we trying at least?");
+      const response = await fetch('http://localhost:5000/reorder_stops', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ stops: formData.stops }), // Send stops in request body
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update the form data with the reordered stops from the backend
+        setFormData((prev) => ({
+          ...prev,
+          stops: data.stops, // Reordered stops from Flask backend
+        }));
+
+        // Optionally, proceed to fetch the route once the stops are reordered
+        const routeData = await getMultiStopRoute(data.stops);
+        setRoute(routeData);
+        setIsMapView(true);
+      } else {
+        console.error("Error reordering stops:", data);
+      }
+    } catch (error) {
+      console.error("Error calling backend:", error);
+    }
+
     const validStops = formData.stops.every((stop) => stop.coords);
     if (validStops) {
       const routeData = await getMultiStopRoute(formData.stops);
