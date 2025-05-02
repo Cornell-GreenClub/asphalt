@@ -226,7 +226,6 @@ const ExplorePage = () => {
     // Send the stops to the Flask backend to reorder them
     //chatgpt code TODO: change later
     try {
-      console.log("Are we trying at least?");
       const response = await fetch('http://localhost:5000/reorder_stops', {
         method: 'POST',
         headers: {
