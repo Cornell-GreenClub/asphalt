@@ -1,0 +1,226 @@
+start,end,weight average
+1. dewitt middle school,1. dewitt middle school,514.3055556
+1. dewitt middle school,10. maint garage,514.3055556
+1. dewitt middle school,2. northeast elementary,514.3055556
+1. dewitt middle school,3. cayuga heights elementary,514.3055556
+1. dewitt middle school,4. belle sherman,514.3055556
+1. dewitt middle school,5. caroline elementary,514.3055556
+1. dewitt middle school,6. south hill elementary,514.3055556
+1. dewitt middle school,7. bjm elementary,514.3055556
+1. dewitt middle school,8. fall creek elementary,514.3055556
+1. dewitt middle school,9. boynton middle school,514.3055556
+1. dewitt middle school,11. bus garage,514.3055556
+1. dewitt middle school,12. enfield elementary,514.3055556
+1. dewitt middle school,13. lehman alternative,514.3055556
+1. dewitt middle school,14. tompkins recycling,514.3055556
+1. dewitt middle school,tst boces tompkins,514.3055556
+10. maint garage,1. dewitt middle school,0
+10. maint garage,10. maint garage,0
+10. maint garage,2. northeast elementary,0
+10. maint garage,3. cayuga heights elementary,0
+10. maint garage,4. belle sherman,0
+10. maint garage,5. caroline elementary,0
+10. maint garage,6. south hill elementary,0
+10. maint garage,7. bjm elementary,0
+10. maint garage,8. fall creek elementary,0
+10. maint garage,9. boynton middle school,0
+10. maint garage,11. bus garage,0
+10. maint garage,12. enfield elementary,0
+10. maint garage,13. lehman alternative,0
+10. maint garage,14. tompkins recycling,0
+10. maint garage,tst boces tompkins,0
+11. bus garage,1. dewitt middle school,0
+11. bus garage,10. maint garage,0
+11. bus garage,2. northeast elementary,0
+11. bus garage,3. cayuga heights elementary,0
+11. bus garage,4. belle sherman,0
+11. bus garage,5. caroline elementary,0
+11. bus garage,6. south hill elementary,0
+11. bus garage,7. bjm elementary,0
+11. bus garage,8. fall creek elementary,0
+11. bus garage,9. boynton middle school,0
+11. bus garage,11. bus garage,0
+11. bus garage,12. enfield elementary,0
+11. bus garage,13. lehman alternative,0
+11. bus garage,14. tompkins recycling,0
+11. bus garage,tst boces tompkins,0
+12. enfield elementary,1. dewitt middle school,271.1111111
+12. enfield elementary,10. maint garage,271.1111111
+12. enfield elementary,2. northeast elementary,271.1111111
+12. enfield elementary,3. cayuga heights elementary,271.1111111
+12. enfield elementary,4. belle sherman,271.1111111
+12. enfield elementary,5. caroline elementary,271.1111111
+12. enfield elementary,6. south hill elementary,271.1111111
+12. enfield elementary,7. bjm elementary,271.1111111
+12. enfield elementary,8. fall creek elementary,271.1111111
+12. enfield elementary,9. boynton middle school,271.1111111
+12. enfield elementary,11. bus garage,271.1111111
+12. enfield elementary,12. enfield elementary,271.1111111
+12. enfield elementary,13. lehman alternative,271.1111111
+12. enfield elementary,14. tompkins recycling,271.1111111
+12. enfield elementary,tst boces tompkins,271.1111111
+13. lehman alternative,1. dewitt middle school,81.11111111
+13. lehman alternative,10. maint garage,81.11111111
+13. lehman alternative,2. northeast elementary,81.11111111
+13. lehman alternative,3. cayuga heights elementary,81.11111111
+13. lehman alternative,4. belle sherman,81.11111111
+13. lehman alternative,5. caroline elementary,81.11111111
+13. lehman alternative,6. south hill elementary,81.11111111
+13. lehman alternative,7. bjm elementary,81.11111111
+13. lehman alternative,8. fall creek elementary,81.11111111
+13. lehman alternative,9. boynton middle school,81.11111111
+13. lehman alternative,11. bus garage,81.11111111
+13. lehman alternative,12. enfield elementary,81.11111111
+13. lehman alternative,13. lehman alternative,81.11111111
+13. lehman alternative,14. tompkins recycling,81.11111111
+13. lehman alternative,tst boces tompkins,81.11111111
+14. tompkins recycling,1. dewitt middle school,0
+14. tompkins recycling,10. maint garage,0
+14. tompkins recycling,2. northeast elementary,0
+14. tompkins recycling,3. cayuga heights elementary,0
+14. tompkins recycling,4. belle sherman,0
+14. tompkins recycling,5. caroline elementary,0
+14. tompkins recycling,6. south hill elementary,0
+14. tompkins recycling,7. bjm elementary,0
+14. tompkins recycling,8. fall creek elementary,0
+14. tompkins recycling,9. boynton middle school,0
+14. tompkins recycling,11. bus garage,0
+14. tompkins recycling,12. enfield elementary,0
+14. tompkins recycling,13. lehman alternative,0
+14. tompkins recycling,14. tompkins recycling,0
+14. tompkins recycling,tst boces tompkins,0
+2. northeast elementary,1. dewitt middle school,326.5277778
+2. northeast elementary,10. maint garage,326.5277778
+2. northeast elementary,2. northeast elementary,326.5277778
+2. northeast elementary,3. cayuga heights elementary,326.5277778
+2. northeast elementary,4. belle sherman,326.5277778
+2. northeast elementary,5. caroline elementary,326.5277778
+2. northeast elementary,6. south hill elementary,326.5277778
+2. northeast elementary,7. bjm elementary,326.5277778
+2. northeast elementary,8. fall creek elementary,326.5277778
+2. northeast elementary,9. boynton middle school,326.5277778
+2. northeast elementary,11. bus garage,326.5277778
+2. northeast elementary,12. enfield elementary,326.5277778
+2. northeast elementary,13. lehman alternative,326.5277778
+2. northeast elementary,14. tompkins recycling,326.5277778
+2. northeast elementary,tst boces tompkins,326.5277778
+3. cayuga heights elementary,1. dewitt middle school,251.8055556
+3. cayuga heights elementary,10. maint garage,251.8055556
+3. cayuga heights elementary,2. northeast elementary,251.8055556
+3. cayuga heights elementary,3. cayuga heights elementary,251.8055556
+3. cayuga heights elementary,4. belle sherman,251.8055556
+3. cayuga heights elementary,5. caroline elementary,251.8055556
+3. cayuga heights elementary,6. south hill elementary,251.8055556
+3. cayuga heights elementary,7. bjm elementary,251.8055556
+3. cayuga heights elementary,8. fall creek elementary,251.8055556
+3. cayuga heights elementary,9. boynton middle school,251.8055556
+3. cayuga heights elementary,11. bus garage,251.8055556
+3. cayuga heights elementary,12. enfield elementary,251.8055556
+3. cayuga heights elementary,13. lehman alternative,251.8055556
+3. cayuga heights elementary,14. tompkins recycling,251.8055556
+3. cayuga heights elementary,tst boces tompkins,251.8055556
+4. belle sherman,1. dewitt middle school,240.9722222
+4. belle sherman,10. maint garage,240.9722222
+4. belle sherman,2. northeast elementary,240.9722222
+4. belle sherman,3. cayuga heights elementary,240.9722222
+4. belle sherman,4. belle sherman,240.9722222
+4. belle sherman,5. caroline elementary,240.9722222
+4. belle sherman,6. south hill elementary,240.9722222
+4. belle sherman,7. bjm elementary,240.9722222
+4. belle sherman,8. fall creek elementary,240.9722222
+4. belle sherman,9. boynton middle school,240.9722222
+4. belle sherman,11. bus garage,240.9722222
+4. belle sherman,12. enfield elementary,240.9722222
+4. belle sherman,13. lehman alternative,240.9722222
+4. belle sherman,14. tompkins recycling,240.9722222
+4. belle sherman,tst boces tompkins,240.9722222
+5. caroline elementary,1. dewitt middle school,251.1111111
+5. caroline elementary,10. maint garage,251.1111111
+5. caroline elementary,2. northeast elementary,251.1111111
+5. caroline elementary,3. cayuga heights elementary,251.1111111
+5. caroline elementary,4. belle sherman,251.1111111
+5. caroline elementary,5. caroline elementary,251.1111111
+5. caroline elementary,6. south hill elementary,251.1111111
+5. caroline elementary,7. bjm elementary,251.1111111
+5. caroline elementary,8. fall creek elementary,251.1111111
+5. caroline elementary,9. boynton middle school,251.1111111
+5. caroline elementary,11. bus garage,251.1111111
+5. caroline elementary,12. enfield elementary,251.1111111
+5. caroline elementary,13. lehman alternative,251.1111111
+5. caroline elementary,14. tompkins recycling,251.1111111
+5. caroline elementary,tst boces tompkins,251.1111111
+6. south hill elementary,1. dewitt middle school,357.2222222
+6. south hill elementary,10. maint garage,357.2222222
+6. south hill elementary,2. northeast elementary,357.2222222
+6. south hill elementary,3. cayuga heights elementary,357.2222222
+6. south hill elementary,4. belle sherman,357.2222222
+6. south hill elementary,5. caroline elementary,357.2222222
+6. south hill elementary,6. south hill elementary,357.2222222
+6. south hill elementary,7. bjm elementary,357.2222222
+6. south hill elementary,8. fall creek elementary,357.2222222
+6. south hill elementary,9. boynton middle school,357.2222222
+6. south hill elementary,11. bus garage,357.2222222
+6. south hill elementary,12. enfield elementary,357.2222222
+6. south hill elementary,13. lehman alternative,357.2222222
+6. south hill elementary,14. tompkins recycling,357.2222222
+6. south hill elementary,tst boces tompkins,357.2222222
+7. bjm elementary,1. dewitt middle school,242.5
+7. bjm elementary,10. maint garage,242.5
+7. bjm elementary,2. northeast elementary,242.5
+7. bjm elementary,3. cayuga heights elementary,242.5
+7. bjm elementary,4. belle sherman,242.5
+7. bjm elementary,5. caroline elementary,242.5
+7. bjm elementary,6. south hill elementary,242.5
+7. bjm elementary,7. bjm elementary,242.5
+7. bjm elementary,8. fall creek elementary,242.5
+7. bjm elementary,9. boynton middle school,242.5
+7. bjm elementary,11. bus garage,242.5
+7. bjm elementary,12. enfield elementary,242.5
+7. bjm elementary,13. lehman alternative,242.5
+7. bjm elementary,14. tompkins recycling,242.5
+7. bjm elementary,tst boces tompkins,242.5
+8. fall creek elementary,1. dewitt middle school,273.3333333
+8. fall creek elementary,10. maint garage,273.3333333
+8. fall creek elementary,2. northeast elementary,273.3333333
+8. fall creek elementary,3. cayuga heights elementary,273.3333333
+8. fall creek elementary,4. belle sherman,273.3333333
+8. fall creek elementary,5. caroline elementary,273.3333333
+8. fall creek elementary,6. south hill elementary,273.3333333
+8. fall creek elementary,7. bjm elementary,273.3333333
+8. fall creek elementary,8. fall creek elementary,273.3333333
+8. fall creek elementary,9. boynton middle school,273.3333333
+8. fall creek elementary,11. bus garage,273.3333333
+8. fall creek elementary,12. enfield elementary,273.3333333
+8. fall creek elementary,13. lehman alternative,273.3333333
+8. fall creek elementary,14. tompkins recycling,273.3333333
+8. fall creek elementary,tst boces tompkins,273.3333333
+9. boynton middle school,1. dewitt middle school,484.3055556
+9. boynton middle school,10. maint garage,484.3055556
+9. boynton middle school,2. northeast elementary,484.3055556
+9. boynton middle school,3. cayuga heights elementary,484.3055556
+9. boynton middle school,4. belle sherman,484.3055556
+9. boynton middle school,5. caroline elementary,484.3055556
+9. boynton middle school,6. south hill elementary,484.3055556
+9. boynton middle school,7. bjm elementary,484.3055556
+9. boynton middle school,8. fall creek elementary,484.3055556
+9. boynton middle school,9. boynton middle school,484.3055556
+9. boynton middle school,11. bus garage,484.3055556
+9. boynton middle school,12. enfield elementary,484.3055556
+9. boynton middle school,13. lehman alternative,484.3055556
+9. boynton middle school,14. tompkins recycling,484.3055556
+9. boynton middle school,tst boces tompkins,484.3055556
+tst boces tompkins,1. dewitt middle school,0
+tst boces tompkins,10. maint garage,0
+tst boces tompkins,2. northeast elementary,0
+tst boces tompkins,3. cayuga heights elementary,0
+tst boces tompkins,4. belle sherman,0
+tst boces tompkins,5. caroline elementary,0
+tst boces tompkins,6. south hill elementary,0
+tst boces tompkins,7. bjm elementary,0
+tst boces tompkins,8. fall creek elementary,0
+tst boces tompkins,9. boynton middle school,0
+tst boces tompkins,11. bus garage,0
+tst boces tompkins,12. enfield elementary,0
+tst boces tompkins,13. lehman alternative,0
+tst boces tompkins,14. tompkins recycling,0
+tst boces tompkins,tst boces tompkins,0
