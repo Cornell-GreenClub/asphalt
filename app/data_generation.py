@@ -31,6 +31,19 @@ addresses_to_locations = {
     'Recycling and Solid Waste Center, 160 Commercial Avenue, Ithaca, NY' : '14. tompkins recycling'
 }
 
+
+"""
+
+Create a compelte list of locations and indices so computations can be done on the entire original route.
+
+"""
+def create_master_location_index():
+    location_names = list(addresses_to_locations.values())
+    location_to_index = {name: i for i, name in enumerate(location_names)}
+    index_to_location_name = location_names  # index maps directly to list position
+    return location_to_index, index_to_location_name
+
+
 """
 generate the new locations to index, converting addresses to locations first
 
@@ -39,18 +52,19 @@ stops: a list of dictionaries each containing the address and a dict of lat/long
 returns: a dictionary of each stop to an index
 """
 def addresses_to_location_to_index(stops):
-    index = 0 #index counter for the dictionary
     location_to_index = {}
+    seen_locations = set()
+    index = 0
 
     for stop in stops:
         address = stop.get('location')
+        location = addresses_to_locations.get(address)
 
-        #check if the address is contained
-        if (addresses_to_locations.get(address) == None):
+        if location is None: #check containment
             print(address, " is not contained.")
-            #otherwise, add it to the location to index dictionary, and increment index
-        else:
-            location_to_index.update({addresses_to_locations.get(address) : index})
+        elif location not in seen_locations: #check uniqueness
+            location_to_index[location] = index
+            seen_locations.add(location)
             index += 1
 
     return location_to_index

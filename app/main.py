@@ -10,7 +10,6 @@ def reorder_stops():
     data = request.json  # Get the incoming data (JSON)
     stops = data.get('stops', [])
 
-    print("WE GOT DATA!!!!")
     print(stops)
     
     solution = ithaca_model.find_solution(stops)

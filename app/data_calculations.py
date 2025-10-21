@@ -82,7 +82,7 @@ def determine_w_ext(work_data): #old: determine_f(work_data)
     """
     total_wth = sum(segment['W_ThA->B'] for segment in work_data)
 
-    print("total w_th: ", total_wth)
+    #print("total w_th: ", total_wth)
 
     w_actual_total = fuel_consumption_liters * diesel_to_J
     return w_actual_total - total_wth #old: (w_actual_total / total_wth) - 1
@@ -143,7 +143,7 @@ def compute_work_for_route(route, distance_data, elevation_data, weight_data, in
 
         cumulative_mass += segment_mass  # accumulate mass
 
-        print("mass for segment", i, ":", cumulative_mass)
+        #print("mass for segment", i, ":", cumulative_mass)
 
         if index_to_location_name[start] == '14. tompkins recycling':
             cumulative_mass = 18325.1317  # mass of empty truck
@@ -169,8 +169,8 @@ def compute_work_for_route(route, distance_data, elevation_data, weight_data, in
             'W_ThA->B': w_th,
         }
         # add actual work if f is non-zero
-        print("Work Theoretical For ", index_to_location_name[start], " to ", index_to_location_name[end], " : ", w_th)
-        print("V_avg for ", index_to_location_name[start], " to ", index_to_location_name[end], " : ", v_avg)
+        #print("Work Theoretical For ", index_to_location_name[start], " to ", index_to_location_name[end], " : ", w_th)
+        #print("V_avg for ", index_to_location_name[start], " to ", index_to_location_name[end], " : ", v_avg)
 
         work_data.append(work_entry)
     return work_data

@@ -1,6 +1,6 @@
 import numpy as np
 from ortools.constraint_solver import routing_enums_pb2, pywrapcp
-from data_generation import parse_matrix, get_original_route,save_matrix_to_csv, create_index_to_location, addresses_to_location_to_index
+from data_generation import create_master_location_index, parse_matrix, get_original_route,save_matrix_to_csv, create_index_to_location, addresses_to_location_to_index
 from data_calculations import compute_work_for_route, determine_w_ext, compute_work_theoretical_matrix, calculate_total_work_cost_in_J, calculate_original_cost_in_J
 
 """
@@ -15,6 +15,8 @@ def find_solution(stops):
     location_to_index = addresses_to_location_to_index(stops)
     index_to_location_name = create_index_to_location(location_to_index)
 
+    original_location_to_index, original_index_to_location_name = create_master_location_index()
+
     # load csv data files
     distance_data = parse_matrix('distance_time_matrix.csv')
     elevation_data = parse_matrix('elevation_matrix.csv')
@@ -23,7 +25,7 @@ def find_solution(stops):
     # determine f
     original_route = get_original_route(stops)
     work_for_original_route = compute_work_for_route(
-        original_route, distance_data, elevation_data, weight_data, index_to_location_name, 0)
+        original_route, distance_data, elevation_data, weight_data, original_index_to_location_name, 0)
     w_ext_value = abs(determine_w_ext(work_for_original_route)) #was abs
     print(f"Determined value of w_ext: {w_ext_value:.4f}")
 
@@ -55,7 +57,7 @@ def find_solution(stops):
     #total = calculate_total_work_cost_in_J(work1, w_ext_value)
     print("original cost:", calculate_original_cost_in_J())
 
-    print("recalulated original cost:", calculate_total_work_cost_in_J(work_for_original_route, w_ext_value))
+    #print("recalulated original cost:", calculate_total_work_cost_in_J(work_for_original_route, w_ext_value))
 
     return opt_route
 
@@ -139,11 +141,8 @@ def format_tsp(work_matrix, location_to_index):
     for i in range(1, num_nodes - 1):
         cost_matrix[i][0] = high_cost
 
-    print(cost_matrix)
-
     # shift the matrix to make all values non-negative
     min_value = np.min(cost_matrix)
-    print("min_value:", min_value)
     if min_value < 0:
         cost_matrix += abs(min_value) 
 
@@ -156,8 +155,6 @@ def format_tsp(work_matrix, location_to_index):
         "num_vehicles": 1,  # single vehicle for TSP (OR-tools argument)
         "depot": 0  # fixed starting point (OR-tools argument)
     }
-
-    print(cost_matrix)
 
     return data
 
