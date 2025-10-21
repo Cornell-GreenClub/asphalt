@@ -17,7 +17,34 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins-regular);
+  font-size: 20px;
+}
+
+/* Override autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+.poppins-bold {
+  font-family: var(--font-poppins-bold);
+  font-weight: 700;
+}
+
+.poppins-medium {
+  font-family: var(--font-poppins-medium);
+  font-weight: 500;
+}
+
+.poppins-extrabold {
+  font-family: var(--font-poppins-extrabold);
+  font-weight: 800;
+}
+
+.poppins-semibold {
+  font-family: var(--font-poppins-semibold);
+  font-weight: 600;
 }
 
 @layer utilities {
@@ -96,6 +123,11 @@ body {
   animation: fade-in-up 1s ease-out;
 }
 
-.animate-fade-in-left {
-  animation: fade-in-left 1s ease-out;
+.asphalt-green {
+  color: #034626;
 }
+
+.asphalt-green-hover:hover {
+  color: #218c3a;
+}
+

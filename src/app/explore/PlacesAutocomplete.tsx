@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { debounce } from 'lodash';
 
 // Add cache interface
@@ -19,12 +19,18 @@ interface PlacesAutocompleteProps {
     formatted_address: string;
     geometry: { location: { lat: number; lng: number } };
   }) => void;
+  inputClassName?: string;
+  placeholder?: string;
+  onDropdownVisibilityChange?: (visible: boolean) => void;
 }
 
 const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
   value,
   onChange,
   onSelect,
+  inputClassName,
+  placeholder,
+  onDropdownVisibilityChange,
 }) => {
   const [suggestions, setSuggestions] = useState<Place[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -32,9 +38,10 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const cache = useRef<Cache>({});
+  const lastDropdownState = useRef<boolean | null>(null);
 
-  // Improved search function with caching
-  const searchPlaces = useCallback(
+  // Improved search function with caching (debounced and stable)
+  const searchPlacesRef = useRef(
     debounce(async (query: string) => {
       if (!query || query.length < 3) {
         setSuggestions([]);
@@ -76,12 +83,11 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
       } finally {
         setIsLoading(false);
       }
-    }, 200), // Reduced debounce time from 300ms to 200ms
-    []
+    }, 200)
   );
 
   useEffect(() => {
-    searchPlaces(value);
+    searchPlacesRef.current(value);
   }, [value]);
 
   // Close dropdown when clicking outside
@@ -98,6 +104,14 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const currentState = isOpen && suggestions.length > 0;
+    if (onDropdownVisibilityChange && lastDropdownState.current !== currentState) {
+      onDropdownVisibilityChange(currentState);
+      lastDropdownState.current = currentState;
+    }
+  }, [isOpen, suggestions, onDropdownVisibilityChange]);
 
   const handleSuggestionClick = (place: Place) => {
     onChange(place.display_name);
@@ -153,25 +167,23 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
         }}
         onKeyDown={handleKeyDown}
         onFocus={() => setIsOpen(true)}
-        className={`w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-          isLoading ? 'pr-10' : ''
-        }`}
-        placeholder="Search locations..."
+        className={`w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#034626] text-gray-700 placeholder-gray-600 text-[18px] poppins-regular ${isLoading ? 'pr-10' : ''} ${inputClassName || ''}`}
+        placeholder={placeholder || 'Search locations...'}
       />
 
       {isLoading && (
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-          <div className="animate-spin h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+          <div className="animate-spin h-4 w-4 border-2 border-[#034626] border-t-transparent rounded-full"></div>
         </div>
       )}
 
       {isOpen && suggestions.length > 0 && (
-        <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto shadow-lg">
+        <ul className="absolute z-30 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-auto shadow-lg">
           {suggestions.map((place, index) => (
             <li
               key={index}
               onClick={() => handleSuggestionClick(place)}
-              className={`px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm ${
+              className={`px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-black ${
                 index === selectedIndex ? 'bg-blue-50' : ''
               }`}
             >

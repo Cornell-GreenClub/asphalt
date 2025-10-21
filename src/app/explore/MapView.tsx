@@ -269,10 +269,11 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
         <button
           key={option.value}
           onClick={() => onChange(option.value)}
-          className={`px-3 py-1 rounded-md text-sm ${unit === option.value
+          className={`px-3 py-1 rounded-md text-sm ${
+            unit === option.value
               ? 'bg-white shadow text-blue-600'
               : 'text-gray-600 hover:bg-gray-200'
-            }`}
+          }`}
         >
           {option.label}
         </button>

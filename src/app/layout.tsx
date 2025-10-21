@@ -1,20 +1,35 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
+
+const poppins = localFont({
+  src: './fonts/Poppins/Poppins-Regular.ttf',
+  variable: '--font-poppins-regular',
 });
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
+
+const poppinsBold = localFont({
+  src: './fonts/Poppins/Poppins-Bold.ttf',
+  variable: '--font-poppins-bold',
+});
+
+const poppinsMedium = localFont({
+  src: './fonts/Poppins/Poppins-Medium.ttf',
+  variable: '--font-poppins-medium',
+});
+
+const poppinsExtraBold = localFont({
+  src: './fonts/Poppins/Poppins-ExtraBold.ttf',
+  variable: '--font-poppins-extrabold',
+});
+
+const poppinsSemibold = localFont({
+  src: './fonts/Poppins/Poppins-SemiBold.ttf',
+  variable: '--font-poppins-semibold',
 });
 
 export const metadata: Metadata = {
   title: 'Asphalt',
-  description: 'Optimizing routes, minimizing emissions.',
+  description: 'Smarter routes, greener future',
 };
 
 export default function RootLayout({
@@ -26,7 +41,7 @@ export default function RootLayout({
     <>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${poppins.variable} ${poppinsBold.variable} ${poppinsMedium.variable} ${poppinsExtraBold.variable} ${poppinsSemibold.variable} antialiased`}
         >
           {children}
         </body>

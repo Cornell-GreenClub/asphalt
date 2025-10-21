@@ -6,11 +6,15 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center p-4">
+    <nav className="bg-white shadow-md sticky top-0 z-50 border pl-[22px] pr-[22px]">
+      <div className="w-full flex justify-between items-center p-4">
         {/* Logo */}
         <Link href="/" className="text-gray-800 text-2xl font-bold">
-          <img className="w-20 h-15" src="/images/logoo.png" alt="Asphalt Logo" />
+          <img
+            className="w-[93.88] h-[82px]"
+            src="/images/logoo.png"
+            alt="Asphalt Logo"
+          />
         </Link>
 
         {/* Hamburger Icon for Mobile */}
@@ -49,13 +53,13 @@ export default function Navbar() {
         <div
           className={`${
             isOpen ? 'block' : 'hidden'
-          } absolute top-full left-0 right-0 bg-white md:relative md:top-0 md:block md:bg-transparent`}
+          } absolute top-full left-0 right-0 bg-white md:relative md:top-0 md:block md:bg-transparent poppins-regular text-xl`}
         >
-          <ul className="flex flex-col md:flex-row md:space-x-8 p-4 md:p-0">
+          <ul className="flex flex-col md:flex-row md:space-x-[11px] p-4 md:p-0">
             <li>
               <Link
                 href="/"
-                className="block py-2 px-4 text-gray-700 hover:text-green-600 transition-colors duration-300"
+                className="block py-2 px-4 text-gray-700 hover:text-[#034626] transition-colors duration-300 relative after:content-[''] after:absolute after:w-full after:h-[2px] after:bg-[#034626] after:left-0 after:bottom-1 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
               >
                 Home
               </Link>
@@ -63,15 +67,23 @@ export default function Navbar() {
             <li>
               <Link
                 href="/explore"
-                className="block py-2 px-4 text-gray-700 hover:text-green-600 transition-colors duration-300"
+                className="block py-2 px-4 text-gray-700 hover:text-[#034626] transition-colors duration-300 relative after:content-[''] after:absolute after:w-full after:h-[2px] after:bg-[#034626] after:left-0 after:bottom-1 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
               >
                 Explore
               </Link>
             </li>
             <li>
               <Link
+                href="/about"
+                className="block py-2 px-4 text-gray-700 hover:text-[#034626] transition-colors duration-300 relative after:content-[''] after:absolute after:w-full after:h-[2px] after:bg-[#034626] after:left-0 after:bottom-1 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
+              >
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/contact"
-                className="block py-2 px-4 text-gray-700 hover:text-green-600 transition-colors duration-300"
+                className="block py-2 px-4 text-gray-700 hover:text-[#034626] transition-colors duration-300 relative after:content-[''] after:absolute after:w-full after:h-[2px] after:bg-[#034626] after:left-0 after:bottom-1 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300"
               >
                 Contact
               </Link>

@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import PlacesAutocomplete from './PlacesAutocomplete';
+import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
-import Link from 'next/link';
 
-// Dynamically import the map component with no SSR
+// Dynamically import the map component with no Server-Side Rendering
 const MapView = dynamic(() => import('./MapView'), {
   ssr: false,
   loading: () => (
@@ -158,18 +158,22 @@ const ExplorePage = () => {
   // define stateful variables for the route, and the current view
   const [route, setRoute] = useState(null);
   const [isMapView, setIsMapView] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(Array(formData.stops.length).fill(false));
 
   // Add these computed values
   const startCoords = formData.stops[0]?.coords || null;
   const endCoords = formData.stops[formData.stops.length - 1]?.coords || null;
 
-
-  /*=======================================================
-  
-    INPUT HANDLING
-  
-  =========================================================*/
-
+  // look at later
+  interface Place {
+    formatted_address: string;
+    geometry: {
+      location: {
+        lat: number;
+        lng: number;
+      };
+    };
+  }
 
   // handle a change to the selection of stops
   const handleStopSelect = (place: Place, index: number) => {
@@ -211,13 +215,11 @@ const ExplorePage = () => {
     }));
   };
 
-
-  /*=======================================================
-  
-    CALLS and LOGIC
-  
-  =========================================================*/
-
+  // look at later
+  interface Stop {
+    location: string;
+    coords: Coords | null;
+  }
 
   // given a list of stops, make an API call to osrm that returns route data that is then formatted
   const getMultiStopRoute = async (stops: Stop[]) => {
@@ -290,195 +292,215 @@ const ExplorePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {!isMapView ? (
-        // Form View
-        <div className="p-8">
-          <div className="max-w-4xl mx-auto">
-            <Link
-              href="/"
-              className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 mr-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Back
-            </Link>
-            <h1 className="text-3xl text-black font-bold mb-8">
-              Explore Routes
-            </h1>
-
-            {/* Add preset route button */}
-            <div className="mb-6 flex justify-end">
-              <button
-                onClick={loadPresetRoute}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-              >
-                Load Sample Schools Route
-              </button>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+    <main className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex flex-col">
+      {/* Only show Navbar if not in MapView */}
+      {!isMapView && <Navbar />}
+      <div className="mt-16" />
+      <div className="relative flex-1 flex flex-col justify-center items-center">
+        {/* Decorative Leaves */}
+        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', left: '5rem', top: '5vh', width: '6rem', transform: 'rotate(-26deg) scaleX(-1)', zIndex: 0 }} className="hidden md:block" />
+        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', left: '5rem', top: '30vh', width: '5rem', transform: 'rotate(14deg)', zIndex: 0 }} className="hidden md:block" />
+        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', left: '5rem', top: '55vh', width: '6rem', transform: 'rotate(-21deg) scaleX(-1)', zIndex: 0 }} className="hidden md:block" />
+        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', right: '5rem', top: '10vh', width: '6rem', transform: 'rotate(24deg)', zIndex: 0 }} className="hidden md:block" />
+        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', right: '5rem', top: '35vh', width: '5rem', transform: 'rotate(-16deg) scaleX(-1)', zIndex: 0 }} className="hidden md:block" />
+        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', right: '5rem', top: '60vh', width: '6rem', transform: 'rotate(19deg)', zIndex: 0 }} className="hidden md:block" />
+        {/* Main Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full py-8 pb-24">
+          {!isMapView ? (
+            <div className="w-full max-w-4xl mx-auto flex flex-col items-center px-2 sm:px-4 md:px-8">
+              <h1 className="text-[52px] poppins-bold text-center leading-tight mb-10 text-gray-900 animate-fade-in-down">
+                <span className="asphalt-green">Explore</span> <span className="text-black">Your New Route to</span><br />
+                <span className="asphalt-green mt-2 inline-block">Sustainability</span>
+              </h1>
+              <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-8">
                 {/* Stops Section */}
-                <div className="space-y-4 text-black">
+                <div className="w-full flex flex-col gap-4 relative overflow-visible" style={{minHeight: 60 * formData.stops.length}}>
                   {formData.stops.map((stop, index) => (
-                    <div key={index} className="flex items-center gap-2">
+                    <div key={index} className="flex items-center gap-2 w-full min-h-14 sm:min-h-16">
                       <div className="flex-grow relative">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {index === 0
-                            ? 'Start Location'
-                            : index === formData.stops.length - 1
-                              ? 'End Location'
-                              : `Stop ${index}`}
-                        </label>
+                        {/* Timeline inside and between textboxes */}
+                        <div className="absolute left-5 top-0 h-full w-8 flex flex-col items-center z-10 pointer-events-none">
+                          {/* Vertical line above the circle (not for first) */}
+                          {index !== 0 && (
+                            <div
+                              className="absolute"
+                              style={{
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                top: '-22px',
+                                height: 'calc(50% + 10px)',
+                                width: '2px',
+                                background: '#034626',
+                                borderRadius: 2
+                              }}
+                            />
+                          )}
+                          {/* Circle */}
+                          <div
+                            className={
+                              stop.coords
+                                ? 'w-4 h-4 rounded-full'
+                                : 'w-4 h-4 rounded-full border-2 bg-white'
+                            }
+                            style={{
+                              zIndex: 2,
+                              left: '50%',
+                              transform: 'translateX(-50%)',
+                              position: 'absolute',
+                              top: '50%',
+                              marginTop: '-8px',
+                              background: stop.coords ? '#034626' : 'white',
+                              borderColor: !stop.coords ? '#034626' : undefined,
+                            }}
+                          ></div>
+                          {/* Vertical line below the circle (not for last) */}
+                          {index !== formData.stops.length - 1 && (
+                            <div
+                              className="absolute"
+                              style={{
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                top: 'calc(50% + 14px)',
+                                height: 'calc(50% + 10px)',
+                                width: '2px',
+                                background: '#034626',
+                                borderRadius: 2
+                              }}
+                            />
+                          )}
+                        </div>
                         <PlacesAutocomplete
                           value={stop.location}
                           onChange={(value) => {
                             const newStops = [...formData.stops];
                             newStops[index].location = value;
-                            setFormData((prev) => ({
-                              ...prev,
-                              stops: newStops,
-                            }));
+                            newStops[index].coords = null;
+                            setFormData((prev) => ({ ...prev, stops: newStops }));
                           }}
                           onSelect={(place) => handleStopSelect(place, index)}
+                          inputClassName="text-black text-base sm:text-lg md:text-xl pl-16 py-4"
+                          placeholder={
+                            index === 0
+                              ? 'Enter start location'
+                              : index === formData.stops.length - 1
+                                ? 'Enter end location'
+                                : `Stop ${index}`
+                          }
+                          onDropdownVisibilityChange={(visible) => {
+                            setDropdownVisible((prev) => {
+                              const arr = [...prev];
+                              arr[index] = visible;
+                              return arr;
+                            });
+                          }}
                         />
                       </div>
-                      {formData.stops.length > 2 &&
-                        index !== 0 &&
-                        index !== formData.stops.length - 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeStop(index)}
-                            className="mt-6 p-2 text-gray-400 hover:text-red-500"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </button>
-                        )}
+                      {/* Remove button for intermediate stops */}
+                      {index !== 0 && index !== formData.stops.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeStop(index)}
+                          className="ml-2 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none min-w-[32px] min-h-[32px] flex items-center justify-center"
+                          aria-label="Remove stop"
+                        >
+                          ×
+                        </button>
+                      )}
                     </div>
                   ))}
-
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3 -mt-1 w-full">
                   <button
                     type="button"
                     onClick={addStop}
-                    className="mt-2 flex items-center text-blue-600 hover:text-blue-700"
+                    className="bg-[#034626] hover:bg-[#023219] text-white poppins-semibold text-xl py-1.5 px-4 rounded-xl transform transition-all hover:scale-105 w-full sm:w-auto"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-1"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Add stop
+                    + Add stop
+                  </button>
+                  <button
+                    type="button"
+                    onClick={loadPresetRoute}
+                    className="border-2 border-[#034626] asphalt-green poppins-semibold text-xl py-1.5 px-4 rounded-xl transform transition-all hover:scale-105 w-full sm:w-auto"
+                  >
+                    Load sample schools route
                   </button>
                 </div>
-
-                {/* Order Checkbox */}
-                <div className="flex items-center">
+                <div className="flex items-center w-full -mt-4 mb-4">
                   <input
+                    id="maintainOrder"
                     type="checkbox"
                     name="maintainOrder"
                     checked={formData.maintainOrder}
                     onChange={handleInputChange}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    className="mr-2 w-4 h-4 accent-[#034626] border-[#034626] rounded focus:ring-2 focus:ring-[#034626] transition-transform duration-150 hover:scale-110 focus:scale-110 cursor-pointer"
                   />
-                  <label className="ml-2 block text-sm text-gray-700">
-                    Stops are in the order as they are now
+                  <label htmlFor="maintainOrder" className="text-gray-600 text-base text-[16px] cursor-pointer">
+                    The stops are in the order they are currently operating
                   </label>
                 </div>
-
-                {/* Additional Fields */}
-                <div className="grid grid-cols-3 gap-4 text-black">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Current Fuel
-                    </label>
-                    <input
-                      type="text"
-                      name="currentFuel"
-                      value={formData.currentFuel}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter fuel amount"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Time
-                    </label>
-                    <input
-                      type="text"
-                      name="time"
-                      value={formData.time}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter time"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Vehicle Number
-                    </label>
-                    <input
-                      type="text"
-                      name="vehicleNumber"
-                      value={formData.vehicleNumber}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      placeholder="Enter vehicle number"
-                    />
+                <div className="w-full flex flex-col gap-2 mt-10">
+                  <h3 className="text-4xl text-center mb-2 text-gray-800 poppins-bold">
+                    Tell Us About Your <span className="asphalt-green">Vehicle</span>
+                  </h3>
+                  <div className="grid grid-cols-3 gap-4 w-full mt-2">
+                    <div className="flex flex-col">
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">Current Fuel Per Trip</label>
+                      <input
+                        type="text"
+                        name="currentFuel"
+                        value={formData.currentFuel}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#034626] text-gray-700 placeholder-gray-600 text-[18px] poppins-regular"
+                        placeholder="gal"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">Trip Duration</label>
+                      <input
+                        type="text"
+                        name="time"
+                        value={formData.time}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#034626] text-gray-700 placeholder-gray-600 text-[18px] poppins-regular"
+                        placeholder="hh:mm"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">User Input</label>
+                      <input
+                        type="text"
+                        name="vehicleNumber"
+                        value={formData.vehicleNumber}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-[#034626] text-gray-700 placeholder-gray-600 text-[18px] poppins-regular"
+                        placeholder=""
+                      />
+                    </div>
                   </div>
                 </div>
-
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="w-full bg-[#034626] hover:bg-[#023219] text-white poppins-semibold text-xl py-2 px-4 rounded-xl transform transition-all hover:scale-105 -mt-1"
                 >
-                  Generate Route
+                  Optimize Route
                 </button>
               </form>
             </div>
-          </div>
+          ) : (
+            <MapView
+              formData={formData}
+              route={route}
+              startCoords={startCoords}
+              endCoords={endCoords}
+              onBack={() => setIsMapView(false)}
+            />
+          )}
         </div>
-      ) : (
-        <MapView
-          formData={formData}
-          route={route}
-          startCoords={startCoords}
-          endCoords={endCoords}
-          onBack={() => setIsMapView(false)}
-        />
-      )}
-    </div>
+      </div>
+      <div className="mt-32">
+        <Footer />
+      </div>
+    </main>
   );
 };
 
