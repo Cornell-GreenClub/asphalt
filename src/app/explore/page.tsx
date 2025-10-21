@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import PlacesAutocomplete from './PlacesAutocomplete';
 import Footer from '../components/Footer';
@@ -66,11 +66,11 @@ const presetRoute = {
       coords: { lat: 42.4624, lng: -76.4921 },
     },
     {
-      location: 'TST BOCES, 555 Warren Road, Ithaca, NY 14850',
+      location: '602 Hancock Street, Ithaca, NY 14850',
       coords: { lat: 42.4808, lng: -76.457 },
     },
     {
-      location: '602 Hancock Street, Ithaca, NY 14850',
+      location: '737 Willow Ave, Ithaca, NY 14850',
       coords: { lat: 42.4445, lng: -76.5097 },
     },
     {
@@ -94,12 +94,51 @@ const presetRoute = {
   vehicleNumber: 'BUS-001',
 };
 
+
+/**
+ * 
+ * Renders the explore page, handlilng changes to input. Enables MapView when a route is submitted. 
+ * 
+ */
 const ExplorePage = () => {
+
+  /*=======================================================
+  
+    INTERFACES
+  
+  =========================================================*/
+
+  // define a coordinates interface for standardization
   interface Coords {
     lat: number;
     lng: number;
   }
 
+  // define an interface that defines a place
+  interface Place {
+    formatted_address: string;
+    geometry: {
+      location: {
+        lat: number;
+        lng: number;
+      };
+    };
+  }
+
+  //define an interface for a stop
+  interface Stop {
+    location: string;
+    coords: Coords | null;
+  }
+
+  /*=======================================================
+  
+    STATES
+  
+  =========================================================*/
+
+
+  // define a stateful variable formdata holding necessary data to display
   const [formData, setFormData] = useState({
     stops: [
       { location: '', coords: null as Coords | null }, // Start
@@ -111,6 +150,12 @@ const ExplorePage = () => {
     vehicleNumber: '',
   });
 
+  //debug whenever formData.stops updates
+  useEffect(() => {
+    console.log("Updated stops:", formData.stops);
+  }, [formData.stops]); // Runs whenever `stops` changes
+
+  // define stateful variables for the route, and the current view
   const [route, setRoute] = useState(null);
   const [isMapView, setIsMapView] = useState(false);
   const [dropdownVisible, setDropdownVisible] = useState(Array(formData.stops.length).fill(false));
@@ -119,6 +164,7 @@ const ExplorePage = () => {
   const startCoords = formData.stops[0]?.coords || null;
   const endCoords = formData.stops[formData.stops.length - 1]?.coords || null;
 
+  // look at later
   interface Place {
     formatted_address: string;
     geometry: {
@@ -129,6 +175,7 @@ const ExplorePage = () => {
     };
   }
 
+  // handle a change to the selection of stops
   const handleStopSelect = (place: Place, index: number) => {
     const newStops = [...formData.stops];
     newStops[index] = {
@@ -138,6 +185,7 @@ const ExplorePage = () => {
     setFormData((prev) => ({ ...prev, stops: newStops }));
   };
 
+  // handle adding a stop
   const addStop = () => {
     setFormData((prev) => ({
       ...prev,
@@ -149,6 +197,7 @@ const ExplorePage = () => {
     }));
   };
 
+  //handle removing a stop
   const removeStop = (index: number) => {
     if (formData.stops.length <= 2) return; // Keep at least start and end
     setFormData((prev) => ({
@@ -157,6 +206,7 @@ const ExplorePage = () => {
     }));
   };
 
+  // handle a change to the form input
   const handleInputChange = (e: any) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -165,11 +215,13 @@ const ExplorePage = () => {
     }));
   };
 
+  // look at later
   interface Stop {
     location: string;
     coords: Coords | null;
   }
 
+  // given a list of stops, make an API call to osrm that returns route data that is then formatted
   const getMultiStopRoute = async (stops: Stop[]) => {
     try {
       const coordinates = stops
@@ -195,23 +247,48 @@ const ExplorePage = () => {
     }
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    const validStops = formData.stops.every((stop) => stop.coords);
-    if (validStops) {
-      const routeData = await getMultiStopRoute(formData.stops);
+  // Reusable route generation logic, calling the backend
+  const generateRouteFromStops = async (stops: any[]) => {
+    try {
+      // Call the Flask backend to reorder stops
+      const response = await fetch('http://localhost:5000/reorder_stops', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stops }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Error reordering stops:", data);
+        return;
+      }
+
+      // Update the form data with reordered stops
+      setFormData((prev) => ({
+        ...prev,
+        stops: data.stops,
+      }));
+
+      // Get route and update map
+      const routeData = await getMultiStopRoute(data.stops);
       setRoute(routeData);
       setIsMapView(true);
+    } catch (error) {
+      console.error("Error calling backend:", error);
     }
   };
 
-  const loadPresetRoute = () => {
+  // Form submission handler
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    await generateRouteFromStops(formData.stops);
+  };
+
+  // Preset route loader
+  const loadPresetRoute = async () => {
     setFormData(presetRoute);
-    // Since we have all coordinates, we can immediately get the route
-    getMultiStopRoute(presetRoute.stops).then((routeData) => {
-      setRoute(routeData);
-      setIsMapView(true);
-    });
+    await generateRouteFromStops(presetRoute.stops);
   };
 
   return (

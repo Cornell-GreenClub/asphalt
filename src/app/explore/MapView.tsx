@@ -26,6 +26,8 @@ L.Icon.Default.mergeOptions({
     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
 });
 
+
+// define unit conversions
 const convertUnits = {
   distance: {
     kmToMiles: (km: number) => (km * 0.621371).toFixed(1),
@@ -42,6 +44,11 @@ const convertUnits = {
   },
 };
 
+/**
+ * 
+ * @param route route to calculate distance of, 2d array of latitude longitude
+ * @returns distance to nearest integer in kilometers
+ */
 const calculateRouteDistance = (route: number[][]) => {
   let totalDistance = 0;
   for (let i = 0; i < route.length - 1; i++) {
@@ -52,6 +59,18 @@ const calculateRouteDistance = (route: number[][]) => {
   return Math.round(totalDistance);
 };
 
+/**
+ * MapController adjusts the map view to fit the provided route or coordinates.
+ * 
+ * Props:
+ * - startCoords: Coordinates object for the start point (lat, lng)
+ * - endCoords: Coordinates object for the end point (lat, lng)
+ * - route: Array of lat/lng tuples representing the route
+ * 
+ * Behavior:
+ * - If a route is provided, fit the map to its bounds.
+ * - Otherwise, fit the map to the bounds defined by the start and end coordinates.
+ */
 const MapController = ({ startCoords, endCoords, route }: any) => {
   const map = useMap();
 
@@ -71,6 +90,15 @@ const MapController = ({ startCoords, endCoords, route }: any) => {
   return null;
 };
 
+/**
+ * Legend displays a visual guide to map markers and route colors.
+ * 
+ * UI Legend includes:
+ * - Blue circle: Start point
+ * - Red circle: End point
+ * - Yellow circle: Intermediate stop
+ * - Blue line: Route path
+ */
 const Legend = () => {
   return (
     <div className="absolute bottom-5 right-5 bg-white p-4 rounded-lg shadow-lg z-[1000] text-sm text-black">
@@ -97,6 +125,15 @@ const Legend = () => {
   );
 };
 
+/**
+ * ZoomControls adds custom zoom in/out buttons to the map.
+ * 
+ * Behavior:
+ * - Zoom in: increases the map's zoom level
+ * - Zoom out: decreases the map's zoom level
+ * 
+ * Styling ensures visibility and hover feedback.
+ */
 const ZoomControls = () => {
   const map = useMap();
 
@@ -146,11 +183,21 @@ const ZoomControls = () => {
   );
 };
 
+/**
+ * AnalyticsPanel displays route analytics, including distance, emissions, cost savings,
+ * and a chart of emissions over time. It allows users to toggle units and export a report.
+ *
+ * Props:
+ * - isOpen: Boolean indicating whether the panel is visible
+ * - onClose: Function to close the panel
+ * - route: Array of route coordinates
+ * - formData: Object containing form submission data, such as stops and time
+ */
 const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
   const [distanceUnit, setDistanceUnit] = useState<'km' | 'mi'>('km');
   const [emissionsUnit, setEmissionsUnit] = useState<'co2' | 'trees'>('co2');
 
-  // Calculate actual route distance
+  // Compute original route distance and assume a 15% optimization
   const originalDistance = route ? calculateRouteDistance(route) : 0;
   const optimizedDistance = Math.round(originalDistance * 0.85); // Assuming 15% optimization
   const distanceSaved = originalDistance - optimizedDistance;
@@ -158,7 +205,7 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
     ? ((distanceSaved / originalDistance) * 100).toFixed(1)
     : '0';
 
-  // Update emissions based on actual distance
+  // Calculate emissions using a fixed emission rate
   const emissionsPerKm = 0.12; // kg CO2 per km (example value)
   const totalEmissions =
     Math.round(optimizedDistance * emissionsPerKm * 10) / 10;
@@ -178,22 +225,25 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
   // const emissionsSaved = 2.4; // kg CO2
   // const savingsPercentage = 15.5;
 
-  // Update mock emissions data based on actual distance
+  // Generate mock emissions data over time for chart display
   const mockEmissionsData = Array.from({ length: 6 }, (_, i) => ({
     time: `${i}h`,
     emissions: ((totalEmissions / 6) * (1 + Math.sin(i / 2) * 0.3)).toFixed(1),
     distance: Math.round((optimizedDistance / 6) * (i + 1)),
   }));
 
+    // Extract time information
   const originalTime = formData.time || '6h 30m';
-  const optimizedTime = '5h 23m';
+  const optimizedTime = '5h 23m'; //TODO: PLACEHOLDER
 
+  //format distance
   const formatDistance = (km: number) => {
     return distanceUnit === 'km'
       ? `${km} km`
       : `${convertUnits.distance.kmToMiles(km)} mi`;
   };
 
+  //format emissions
   const formatEmissions = (kgCO2: number) => {
     if (emissionsUnit === 'trees') {
       return `${convertUnits.emissions.kgToTrees(kgCO2)} trees/year`;
@@ -204,6 +254,7 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
       : `${convertUnits.emissions.kgToLbs(kgCO2)} lbs CO₂`;
   };
 
+  // Reusable toggle UI component for selecting units
   const UnitToggle = ({
     unit,
     onChange,
@@ -230,6 +281,7 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
     </div>
   );
 
+  // Export route report as downloadable JSON
   const handleExport = () => {
     const reportData = {
       routeInfo: {
@@ -478,14 +530,33 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
   );
 };
 
+/**
+ * MapView renders a full-screen interactive map displaying the user's route and stops.
+ * It uses Leaflet for map rendering and displays markers, a polyline route, and a side panel
+ * for route analytics. It also provides controls for navigating back and viewing analytics.
+ *
+ * Props:
+ * - formData: Object containing submitted route data, including stops and their coordinates
+ * - route: Array of [lat, lng] points representing the optimized route polyline
+ * - startCoords: Coordinates of the route start point
+ * - endCoords: Coordinates of the route end point
+ * - onBack: Function to navigate back to the previous UI step
+ */
 const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
   const [isAnalyticsPanelOpen, setIsAnalyticsPanelOpen] = useState(false);
 
+  /**
+   * Returns the color of a marker based on its index in the stop list:
+   * - Start (first two): blue
+   * - End (last): red
+   * - Intermediate stops: orange
+   */
   const getMarkerColor = (index: number, total: number) => {
     if (index === 0 || index === 1) return 'blue';
     if (index === total - 1) return 'red';
     return 'orange';
   };
+
 
   return (
     <div className="fixed inset-0 flex">
@@ -496,18 +567,28 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
           zoomControl={false}
           style={{ width: '100%', height: '100%' }}
         >
+          
+          {/* Tile layer for the map visuals */}
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
           />
+
+          {/* Center map based on route start and end */}
           <MapController
             startCoords={startCoords}
             endCoords={endCoords}
             route={route}
           />
+
+          {/* Render a marker for each stop, looping over the stops list and returning a marker for each one */}
           {formData.stops.map(
-            (stop: { coords: { lat: number; lng: number } }, index: number) =>
-              stop.coords && (
+            (stop: { location: string; coords: { lat: number; lng: number } }, index: number) => {
+              const { lat, lng } = stop.coords || {};
+              if (!stop.coords) return null;
+              
+              return (
+
                 <Marker
                   key={index}
                   position={[stop.coords.lat, stop.coords.lng]}
@@ -523,20 +604,29 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
                     })
                   }
                 >
+
                   <Popup>
                     {index === 0
-                      ? 'Start'
+                      ? `Start: ${stop.location}`
                       : index === formData.stops.length - 1
-                        ? 'End'
-                        : `Stop ${index}`}
+                      ? `End: ${stop.location}`
+                      : `Stop ${index}: ${stop.location}`}
                   </Popup>
                 </Marker>
               )
+
+            }
           )}
+
+          {/* Draw the route as a polyline if available */}
           {route && <Polyline positions={route} color="blue" weight={4} />}
+
+          {/* Custom zoom control */}
           <ZoomControls />
         </MapContainer>
       </div>
+
+      {/* Top navigation bar */}
       <div className="absolute top-0 w-full p-4 z-[1000] flex justify-between items-center text-black">
         <button
           onClick={onBack}
@@ -551,7 +641,11 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
           <span>Analytics</span>
         </button>
       </div>
+
+      {/* Map legend component (assumed to explain marker colors) */}
       <Legend />
+
+      {/* Slide-in analytics panel */}
       <AnalyticsPanel
         isOpen={isAnalyticsPanelOpen}
         onClose={() => setIsAnalyticsPanelOpen(false)}
