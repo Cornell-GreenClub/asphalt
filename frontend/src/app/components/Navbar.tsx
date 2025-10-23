@@ -88,14 +88,6 @@ export default function Navbar() {
                 Contact
               </Link>
             </li>
-            <li>
-              <Link
-                href="/about_us"
-                className="block py-2 px-4 text-gray-700 hover:text-green-600 transition-colors duration-300"
-              >
-                About Us
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
