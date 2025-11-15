@@ -94,14 +94,12 @@ const presetRoute = {
   vehicleNumber: 'BUS-001',
 };
 
-
 /**
- * 
- * Renders the explore page, handlilng changes to input. Enables MapView when a route is submitted. 
- * 
+ *
+ * Renders the explore page, handlilng changes to input. Enables MapView when a route is submitted.
+ *
  */
 const ExplorePage = () => {
-
   /*=======================================================
   
     INTERFACES
@@ -137,7 +135,6 @@ const ExplorePage = () => {
   
   =========================================================*/
 
-
   // define a stateful variable formdata holding necessary data to display
   const [formData, setFormData] = useState({
     stops: [
@@ -152,13 +149,15 @@ const ExplorePage = () => {
 
   //debug whenever formData.stops updates
   useEffect(() => {
-    console.log("Updated stops:", formData.stops);
+    console.log('Updated stops:', formData.stops);
   }, [formData.stops]); // Runs whenever `stops` changes
 
   // define stateful variables for the route, and the current view
   const [route, setRoute] = useState(null);
   const [isMapView, setIsMapView] = useState(false);
-  const [dropdownVisible, setDropdownVisible] = useState(Array(formData.stops.length).fill(false));
+  const [dropdownVisible, setDropdownVisible] = useState(
+    Array(formData.stops.length).fill(false)
+  );
 
   // Add these computed values
   const startCoords = formData.stops[0]?.coords || null;
@@ -260,7 +259,7 @@ const ExplorePage = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("Error reordering stops:", data);
+        console.error('Error reordering stops:', data);
         return;
       }
 
@@ -275,7 +274,7 @@ const ExplorePage = () => {
       setRoute(routeData);
       setIsMapView(true);
     } catch (error) {
-      console.error("Error calling backend:", error);
+      console.error('Error calling backend:', error);
     }
   };
 
@@ -298,29 +297,114 @@ const ExplorePage = () => {
       <div className="mt-16" />
       <div className="relative flex-1 flex flex-col justify-center items-center">
         {/* Decorative Leaves */}
-        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', left: '5rem', top: '5vh', width: '6rem', transform: 'rotate(-26deg) scaleX(-1)', zIndex: 0 }} className="hidden md:block" />
-        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', left: '5rem', top: '30vh', width: '5rem', transform: 'rotate(14deg)', zIndex: 0 }} className="hidden md:block" />
-        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', left: '5rem', top: '55vh', width: '6rem', transform: 'rotate(-21deg) scaleX(-1)', zIndex: 0 }} className="hidden md:block" />
-        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', right: '5rem', top: '10vh', width: '6rem', transform: 'rotate(24deg)', zIndex: 0 }} className="hidden md:block" />
-        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', right: '5rem', top: '35vh', width: '5rem', transform: 'rotate(-16deg) scaleX(-1)', zIndex: 0 }} className="hidden md:block" />
-        <img src="/images/leaf.png" alt="Leaf" style={{ position: 'absolute', right: '5rem', top: '60vh', width: '6rem', transform: 'rotate(19deg)', zIndex: 0 }} className="hidden md:block" />
+        <img
+          src="/images/leaf.png"
+          alt="Leaf"
+          style={{
+            position: 'absolute',
+            left: '5rem',
+            top: '5vh',
+            width: '6rem',
+            transform: 'rotate(-26deg) scaleX(-1)',
+            zIndex: 0,
+          }}
+          className="hidden md:block"
+        />
+        <img
+          src="/images/leaf.png"
+          alt="Leaf"
+          style={{
+            position: 'absolute',
+            left: '5rem',
+            top: '30vh',
+            width: '5rem',
+            transform: 'rotate(14deg)',
+            zIndex: 0,
+          }}
+          className="hidden md:block"
+        />
+        <img
+          src="/images/leaf.png"
+          alt="Leaf"
+          style={{
+            position: 'absolute',
+            left: '5rem',
+            top: '55vh',
+            width: '6rem',
+            transform: 'rotate(-21deg) scaleX(-1)',
+            zIndex: 0,
+          }}
+          className="hidden md:block"
+        />
+        <img
+          src="/images/leaf.png"
+          alt="Leaf"
+          style={{
+            position: 'absolute',
+            right: '5rem',
+            top: '10vh',
+            width: '6rem',
+            transform: 'rotate(24deg)',
+            zIndex: 0,
+          }}
+          className="hidden md:block"
+        />
+        <img
+          src="/images/leaf.png"
+          alt="Leaf"
+          style={{
+            position: 'absolute',
+            right: '5rem',
+            top: '35vh',
+            width: '5rem',
+            transform: 'rotate(-16deg) scaleX(-1)',
+            zIndex: 0,
+          }}
+          className="hidden md:block"
+        />
+        <img
+          src="/images/leaf.png"
+          alt="Leaf"
+          style={{
+            position: 'absolute',
+            right: '5rem',
+            top: '60vh',
+            width: '6rem',
+            transform: 'rotate(19deg)',
+            zIndex: 0,
+          }}
+          className="hidden md:block"
+        />
         {/* Main Content */}
         <div className="relative z-10 flex flex-col items-center justify-center w-full py-8 pb-24">
           {!isMapView ? (
             <div className="w-full max-w-4xl mx-auto flex flex-col items-center px-2 sm:px-4 md:px-8">
               <h1 className="text-[52px] poppins-bold text-center leading-tight mb-10 text-gray-900 animate-fade-in-down">
-                <span className="asphalt-green">Explore</span> <span className="text-black">Your New Route to</span><br />
-                <span className="asphalt-green mt-2 inline-block">Sustainability</span>
+                <span className="asphalt-green">Explore</span>{' '}
+                <span className="text-black">Your New Route to</span>
+                <br />
+                <span className="asphalt-green mt-2 inline-block">
+                  Sustainability
+                </span>
               </h1>
-              <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-8">
+              <form
+                onSubmit={handleSubmit}
+                className="w-full flex flex-col items-center gap-8"
+              >
                 {/* Stops Section */}
-                <div className="w-full flex flex-col gap-4 relative overflow-visible" style={{minHeight: 60 * formData.stops.length}}>
+                <div
+                  className="w-full flex flex-col gap-4 relative overflow-visible"
+                  style={{ minHeight: 60 * formData.stops.length }}
+                >
                   {formData.stops.map((stop, index) => (
-                    <div key={index} className="flex items-center gap-2 w-full min-h-14 sm:min-h-16">
+                    <div
+                      key={index}
+                      className="flex items-center gap-4 w-full min-h-14 sm:min-h-16"
+                    >
+                      {/* LEFT COLUMN: location input + timeline */}
                       <div className="flex-grow relative">
-                        {/* Timeline inside and between textboxes */}
+                        {/* Timeline */}
                         <div className="absolute left-5 top-0 h-full w-8 flex flex-col items-center z-10 pointer-events-none">
-                          {/* Vertical line above the circle (not for first) */}
                           {index !== 0 && (
                             <div
                               className="absolute"
@@ -331,11 +415,10 @@ const ExplorePage = () => {
                                 height: 'calc(50% + 10px)',
                                 width: '2px',
                                 background: '#034626',
-                                borderRadius: 2
                               }}
                             />
                           )}
-                          {/* Circle */}
+
                           <div
                             className={
                               stop.coords
@@ -353,7 +436,7 @@ const ExplorePage = () => {
                               borderColor: !stop.coords ? '#034626' : undefined,
                             }}
                           ></div>
-                          {/* Vertical line below the circle (not for last) */}
+
                           {index !== formData.stops.length - 1 && (
                             <div
                               className="absolute"
@@ -364,18 +447,22 @@ const ExplorePage = () => {
                                 height: 'calc(50% + 10px)',
                                 width: '2px',
                                 background: '#034626',
-                                borderRadius: 2
                               }}
                             />
                           )}
                         </div>
+
+                        {/* Location Input */}
                         <PlacesAutocomplete
                           value={stop.location}
                           onChange={(value) => {
                             const newStops = [...formData.stops];
                             newStops[index].location = value;
                             newStops[index].coords = null;
-                            setFormData((prev) => ({ ...prev, stops: newStops }));
+                            setFormData((prev) => ({
+                              ...prev,
+                              stops: newStops,
+                            }));
                           }}
                           onSelect={(place) => handleStopSelect(place, index)}
                           inputClassName="text-black text-base sm:text-lg md:text-xl pl-16 py-4"
@@ -386,26 +473,44 @@ const ExplorePage = () => {
                                 ? 'Enter end location'
                                 : `Stop ${index}`
                           }
-                          onDropdownVisibilityChange={(visible) => {
-                            setDropdownVisible((prev) => {
-                              const arr = [...prev];
-                              arr[index] = visible;
-                              return arr;
-                            });
-                          }}
                         />
                       </div>
-                      {/* Remove button for intermediate stops */}
-                      {index !== 0 && index !== formData.stops.length - 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeStop(index)}
-                          className="ml-2 text-gray-400 hover:text-red-500 text-2xl font-bold focus:outline-none min-w-[32px] min-h-[32px] flex items-center justify-center"
-                          aria-label="Remove stop"
-                        >
-                          ×
-                        </button>
-                      )}
+
+                      {/* RIGHT COLUMN: weight input + reserved delete space */}
+                      <div className="flex items-center gap-2 ml-4 w-20 justify-end">
+                        <input
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          value={stop.weightKg ?? ''}
+                          onChange={(e) => {
+                            const newStops = [...formData.stops];
+                            newStops[index].weightKg = parseFloat(
+                              e.target.value
+                            );
+                            setFormData((prev) => ({
+                              ...prev,
+                              stops: newStops,
+                            }));
+                          }}
+                          className="w-16 px-2 py-1 border border-gray-400 rounded-md text-gray-700 text-sm"
+                          placeholder="kg"
+                        />
+
+                        {/* Reserve a space  for the delete button on all rows */}
+                        {index !== 0 && index !== formData.stops.length - 1 ? (
+                          <button
+                            type="button"
+                            onClick={() => removeStop(index)}
+                            className="text-gray-400 hover:text-red-500 text-xl font-bold"
+                          >
+                            ×
+                          </button>
+                        ) : (
+                          // Empty placeholder same width as button
+                          <div className="w-4" />
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -434,17 +539,23 @@ const ExplorePage = () => {
                     onChange={handleInputChange}
                     className="mr-2 w-4 h-4 accent-[#034626] border-[#034626] rounded focus:ring-2 focus:ring-[#034626] transition-transform duration-150 hover:scale-110 focus:scale-110 cursor-pointer"
                   />
-                  <label htmlFor="maintainOrder" className="text-gray-600 text-base text-[16px] cursor-pointer">
+                  <label
+                    htmlFor="maintainOrder"
+                    className="text-gray-600 text-base text-[16px] cursor-pointer"
+                  >
                     The stops are in the order they are currently operating
                   </label>
                 </div>
                 <div className="w-full flex flex-col gap-2 mt-10">
                   <h3 className="text-4xl text-center mb-2 text-gray-800 poppins-bold">
-                    Tell Us About Your <span className="asphalt-green">Vehicle</span>
+                    Tell Us About Your{' '}
+                    <span className="asphalt-green">Vehicle</span>
                   </h3>
                   <div className="grid grid-cols-3 gap-4 w-full mt-2">
                     <div className="flex flex-col">
-                      <label className="block text-[18px] font-normal text-gray-800 mb-1">Current Fuel Per Trip</label>
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">
+                        Current Fuel Per Trip
+                      </label>
                       <input
                         type="text"
                         name="currentFuel"
@@ -455,7 +566,9 @@ const ExplorePage = () => {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <label className="block text-[18px] font-normal text-gray-800 mb-1">Trip Duration</label>
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">
+                        Trip Duration
+                      </label>
                       <input
                         type="text"
                         name="time"
@@ -466,7 +579,9 @@ const ExplorePage = () => {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <label className="block text-[18px] font-normal text-gray-800 mb-1">User Input</label>
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">
+                        User Input
+                      </label>
                       <input
                         type="text"
                         name="vehicleNumber"
