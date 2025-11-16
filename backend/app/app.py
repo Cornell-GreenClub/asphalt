@@ -15,7 +15,7 @@ CORS(app)
 
 # --- Create a Single Optimizer Instance ---
 try:
-    optimizer = RouteOptimizer(config)
+    optimizer = RouteOptimizer(app.config)
 except Exception as e:
     print(f"FATAL ERROR: Could not initialize RouteOptimizer. {e}")
     optimizer = None

@@ -18,7 +18,10 @@ class RouteOptimizer:
         """
         print("Initializing RouteOptimizer (API-Only, Distance/MPG)...")
         self.config = config
-        print("--- Optimizer is ready ---")
+        
+        # Make the solver time limit configurable, default to 10 seconds
+        self.solver_time_limit_seconds = int(config.get("SOLVER_TIME_LIMIT", 10))
+        print(f"--- Optimizer is ready (Search Strategy: GUIDED_LOCAL_SEARCH, Time Limit: {self.solver_time_limit_seconds}s) ---")
 
     def optimize_route(self, api_response):
         """
@@ -104,10 +107,28 @@ class RouteOptimizer:
         routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
         search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+        
+        # Set a good first solution strategy to give the local search a good starting point
         search_parameters.first_solution_strategy = (
             routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
         )
         
+        # --- Set the Guided Local Search strategy ---
+        # This is a more advanced metaheuristic that allows the solver
+        # to escape local minima and find a better global solution.
+        search_parameters.local_search_metaheuristic = (
+            routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+        )
+        
+        # --- Set the time limit ---
+        # This strategy *requires* a time limit to know when to stop.
+        # We use the value set in the __init__ method.
+        search_parameters.time_limit.seconds = self.solver_time_limit_seconds
+        
+        # Uncomment this to see the solver's log
+        # search_parameters.log_search = True
+        
+        print(f"\nSolving TSP with GUIDED_LOCAL_SEARCH (Time limit: {self.solver_time_limit_seconds}s)...")
         solution = routing.SolveWithParameters(search_parameters)
 
         if solution:
@@ -193,7 +214,7 @@ class RouteOptimizer:
             # --- Optimized Route Fuel Cost ---
             optimized_distance_miles = optimized_distance_km * MILES_PER_KM
             optimized_gallons = optimized_distance_miles / mpg
-            print(f"Optimized Route Fuel Cost: {optimized_gallons:.2f} gallons ({optimized_distance_miles:.2f} miles / {mpg} mpg)")
+            print(f"OptimZized Route Fuel Cost: {optimized_gallons:.2f} gallons ({optimized_distance_miles:.2f} miles / {mpg} mpg)")
             
             if optimized_gallons < original_gallons:
                 savings_gal = original_gallons - optimized_gallons
