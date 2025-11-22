@@ -23,7 +23,7 @@ class RouteOptimizer:
         self.solver_time_limit_seconds = int(config.get("SOLVER_TIME_LIMIT", 10))
         print(f"--- Optimizer is ready (Search Strategy: GUIDED_LOCAL_SEARCH, Time Limit: {self.solver_time_limit_seconds}s) ---")
 
-    def optimize_route(self, api_response):
+    def optimize_route(self, api_response, mpg):
         """
         High-level function to find the optimal route.
         """
@@ -32,7 +32,6 @@ class RouteOptimizer:
             stops_list = api_response['sources']
             location_names = [loc['name'] for loc in stops_list]
             distance_matrix_meters = api_response['distances'] 
-            mpg = float(api_response['mpg'])
             index_to_location_name = location_names
 
         except KeyError as e:

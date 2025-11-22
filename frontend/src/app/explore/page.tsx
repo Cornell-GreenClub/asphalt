@@ -89,8 +89,8 @@ const presetRoute = {
     },
   ],
   maintainOrder: true,
-  currentFuel: 'Full',
-  time: '8h 00m',
+  currentFuel: 40.0,
+  time: 80.0,
   vehicleNumber: 'BUS-001',
 };
 
@@ -231,7 +231,7 @@ const ExplorePage = () => {
         .join(';');
 
       const response = await fetch(
-        `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`
+        `https://127.0.0.1:5000/route/v1/driving/${coordinates}?overview=full&geometries=geojson`
       );
       const data = await response.json();
       if (data.routes && data.routes.length > 0) {
@@ -251,7 +251,7 @@ const ExplorePage = () => {
   const generateRouteFromStops = async (stops: any[]) => {
     try {
       // Call the Flask backend to reorder stops
-      const response = await fetch('http://localhost:5000/reorder_stops', {
+      const response = await fetch('http://localhost:8000/reorder_stops', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ stops }),
@@ -466,7 +466,7 @@ const ExplorePage = () => {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <label className="block text-[18px] font-normal text-gray-800 mb-1">User Input</label>
+                      <label className="block text-[18px] font-normal text-gray-800 mb-1">Vehicle Numbe</label>
                       <input
                         type="text"
                         name="vehicleNumber"

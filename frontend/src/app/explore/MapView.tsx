@@ -339,194 +339,195 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
 
   // Update the emissions impact section to include cost savings
   return (
-    <div
-      className={`fixed right-0 top-0 h-full w-96 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-[1001] flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
-    >
-      {/* Fixed Header */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-black">Route Analytics</h2>
-          <button onClick={onClose} className="p-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-black"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
+    <></>
+    // <div
+    //   className={`fixed right-0 top-0 h-full w-96 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-[1001] flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+    // >
+    //   {/* Fixed Header */}
+    //   <div className="p-4 border-b border-gray-200">
+    //     <div className="flex justify-between items-center">
+    //       <h2 className="text-xl font-semibold text-black">Route Analytics</h2>
+    //       <button onClick={onClose} className="p-2">
+    //         <svg
+    //           xmlns="http://www.w3.org/2000/svg"
+    //           className="h-6 w-6 text-black"
+    //           fill="none"
+    //           viewBox="0 0 24 24"
+    //           stroke="currentColor"
+    //         >
+    //           <path
+    //             strokeLinecap="round"
+    //             strokeLinejoin="round"
+    //             strokeWidth={2}
+    //             d="M6 18L18 6M6 6l12 12"
+    //           />
+    //         </svg>
+    //       </button>
+    //     </div>
+    //   </div>
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="space-y-6 text-black">
-          {/* Unit Controls */}
-          <div className="flex justify-between gap-4 pb-2 border-b border-gray-200">
-            <UnitToggle
-              unit={distanceUnit}
-              onChange={setDistanceUnit}
-              options={[
-                { value: 'km', label: 'KM' },
-                { value: 'mi', label: 'MI' },
-              ]}
-            />
-            <UnitToggle
-              unit={emissionsUnit}
-              onChange={setEmissionsUnit}
-              options={[
-                { value: 'co2', label: 'CO₂' },
-                { value: 'trees', label: 'Trees' },
-              ]}
-            />
-          </div>
+    //   {/* Scrollable Content */}
+    //   <div className="flex-1 overflow-y-auto p-4">
+    //     <div className="space-y-6 text-black">
+    //       {/* Unit Controls */}
+    //       <div className="flex justify-between gap-4 pb-2 border-b border-gray-200">
+    //         <UnitToggle
+    //           unit={distanceUnit}
+    //           onChange={setDistanceUnit}
+    //           options={[
+    //             { value: 'km', label: 'KM' },
+    //             { value: 'mi', label: 'MI' },
+    //           ]}
+    //         />
+    //         <UnitToggle
+    //           unit={emissionsUnit}
+    //           onChange={setEmissionsUnit}
+    //           options={[
+    //             { value: 'co2', label: 'CO₂' },
+    //             { value: 'trees', label: 'Trees' },
+    //           ]}
+    //         />
+    //       </div>
 
-          {/* Updated Emissions Summary */}
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold text-green-800">
-                Impact Summary
-              </h3>
-              <svg
-                className="h-8 w-8 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                />
-              </svg>
-            </div>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="bg-white bg-opacity-50 rounded-lg p-3">
-                <p className="text-sm text-green-600 mb-1">Total Emissions</p>
-                <p className="text-2xl font-bold text-green-700">
-                  {formatEmissions(totalEmissions)}
-                </p>
-              </div>
-              <div className="bg-white bg-opacity-50 rounded-lg p-3">
-                <p className="text-sm text-green-600 mb-1">Emissions Saved</p>
-                <p className="text-2xl font-bold text-green-700">
-                  {formatEmissions(emissionsSaved)}
-                </p>
-              </div>
-            </div>
-            {/* Add Cost Savings */}
-            <div className="bg-white bg-opacity-50 rounded-lg p-3 mb-4">
-              <p className="text-sm text-green-600 mb-1">Cost Savings</p>
-              <div className="flex justify-between items-baseline">
-                <p className="text-2xl font-bold text-green-700">
-                  {formatCost(costSaved)}
-                </p>
-                <p className="text-sm text-green-600">
-                  from {formatCost(originalCost)} to {formatCost(optimizedCost)}
-                </p>
-              </div>
-            </div>
-            <div className="bg-green-100 rounded-lg p-3">
-              <div className="flex items-center justify-between">
-                <span className="text-green-700">
-                  Reduction from optimal routing
-                </span>
-                <span className="font-bold text-green-800">
-                  {savingsPercentage}%
-                </span>
-              </div>
-              <div className="w-full bg-green-200 rounded-full h-2 mt-2">
-                <div
-                  className="bg-green-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${savingsPercentage}%` }}
-                ></div>
-              </div>
-            </div>
-          </div>
+    //       {/* Updated Emissions Summary */}
+    //       <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-xl border border-green-100">
+    //         <div className="flex items-center justify-between mb-4">
+    //           <h3 className="text-xl font-semibold text-green-800">
+    //             Impact Summary
+    //           </h3>
+    //           <svg
+    //             className="h-8 w-8 text-green-600"
+    //             fill="none"
+    //             stroke="currentColor"
+    //             viewBox="0 0 24 24"
+    //           >
+    //             <path
+    //               strokeLinecap="round"
+    //               strokeLinejoin="round"
+    //               strokeWidth="2"
+    //               d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+    //             />
+    //           </svg>
+    //         </div>
+    //         <div className="grid grid-cols-2 gap-4 mb-4">
+    //           <div className="bg-white bg-opacity-50 rounded-lg p-3">
+    //             <p className="text-sm text-green-600 mb-1">Total Emissions</p>
+    //             <p className="text-2xl font-bold text-green-700">
+    //               {formatEmissions(totalEmissions)}
+    //             </p>
+    //           </div>
+    //           <div className="bg-white bg-opacity-50 rounded-lg p-3">
+    //             <p className="text-sm text-green-600 mb-1">Emissions Saved</p>
+    //             <p className="text-2xl font-bold text-green-700">
+    //               {formatEmissions(emissionsSaved)}
+    //             </p>
+    //           </div>
+    //         </div>
+    //         {/* Add Cost Savings */}
+    //         <div className="bg-white bg-opacity-50 rounded-lg p-3 mb-4">
+    //           <p className="text-sm text-green-600 mb-1">Cost Savings</p>
+    //           <div className="flex justify-between items-baseline">
+    //             <p className="text-2xl font-bold text-green-700">
+    //               {formatCost(costSaved)}
+    //             </p>
+    //             <p className="text-sm text-green-600">
+    //               from {formatCost(originalCost)} to {formatCost(optimizedCost)}
+    //             </p>
+    //           </div>
+    //         </div>
+    //         <div className="bg-green-100 rounded-lg p-3">
+    //           <div className="flex items-center justify-between">
+    //             <span className="text-green-700">
+    //               Reduction from optimal routing
+    //             </span>
+    //             <span className="font-bold text-green-800">
+    //               {savingsPercentage}%
+    //             </span>
+    //           </div>
+    //           <div className="w-full bg-green-200 rounded-full h-2 mt-2">
+    //             <div
+    //               className="bg-green-500 h-2 rounded-full transition-all duration-500"
+    //               style={{ width: `${savingsPercentage}%` }}
+    //             ></div>
+    //           </div>
+    //         </div>
+    //       </div>
 
-          {/* Updated Route Metrics */}
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-semibold mb-3">Distance</h4>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Original</p>
-                  <p className="text-xl">{formatDistance(originalDistance)}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-green-600">Optimized</p>
-                  <p className="text-xl text-green-700">
-                    {formatDistance(optimizedDistance)}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-2 text-sm text-green-600">
-                Saved {formatDistance(distanceSaved)} ({distanceSavedPercent}%)
-              </div>
-            </div>
+    //       {/* Updated Route Metrics */}
+    //       <div className="space-y-4">
+    //         <div className="bg-gray-50 p-4 rounded-lg">
+    //           <h4 className="font-semibold mb-3">Distance</h4>
+    //           <div className="grid grid-cols-2 gap-4">
+    //             <div>
+    //               <p className="text-sm text-gray-600">Original</p>
+    //               <p className="text-xl">{formatDistance(originalDistance)}</p>
+    //             </div>
+    //             <div>
+    //               <p className="text-sm text-green-600">Optimized</p>
+    //               <p className="text-xl text-green-700">
+    //                 {formatDistance(optimizedDistance)}
+    //               </p>
+    //             </div>
+    //           </div>
+    //           <div className="mt-2 text-sm text-green-600">
+    //             Saved {formatDistance(distanceSaved)} ({distanceSavedPercent}%)
+    //           </div>
+    //         </div>
 
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-semibold mb-3">Time</h4>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Original</p>
-                  <p className="text-xl">{originalTime}h</p>
-                </div>
-                <div>
-                  <p className="text-sm text-green-600">Optimized</p>
-                  <p className="text-xl text-green-700">{optimizedTime}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+    //         <div className="bg-gray-50 p-4 rounded-lg">
+    //           <h4 className="font-semibold mb-3">Time</h4>
+    //           <div className="grid grid-cols-2 gap-4">
+    //             <div>
+    //               <p className="text-sm text-gray-600">Original</p>
+    //               <p className="text-xl">{originalTime}h</p>
+    //             </div>
+    //             <div>
+    //               <p className="text-sm text-green-600">Optimized</p>
+    //               <p className="text-xl text-green-700">{optimizedTime}</p>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
 
-          {/* Emissions Chart */}
-          <div className="bg-white p-4 rounded-lg border">
-            <h4 className="font-semibold mb-4">Emissions Over Journey</h4>
-            <AreaChart
-              width={300}
-              height={200}
-              data={mockEmissionsData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="colorEmissions" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
-              <YAxis />
-              <Tooltip />
-              <Area
-                type="monotone"
-                dataKey="emissions"
-                stroke="#8884d8"
-                fillOpacity={1}
-                fill="url(#colorEmissions)"
-              />
-            </AreaChart>
-          </div>
+    //       {/* Emissions Chart */}
+    //       <div className="bg-white p-4 rounded-lg border">
+    //         <h4 className="font-semibold mb-4">Emissions Over Journey</h4>
+    //         <AreaChart
+    //           width={300}
+    //           height={200}
+    //           data={mockEmissionsData}
+    //           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+    //         >
+    //           <defs>
+    //             <linearGradient id="colorEmissions" x1="0" y1="0" x2="0" y2="1">
+    //               <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+    //               <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+    //             </linearGradient>
+    //           </defs>
+    //           <CartesianGrid strokeDasharray="3 3" />
+    //           <XAxis dataKey="time" />
+    //           <YAxis />
+    //           <Tooltip />
+    //           <Area
+    //             type="monotone"
+    //             dataKey="emissions"
+    //             stroke="#8884d8"
+    //             fillOpacity={1}
+    //             fill="url(#colorEmissions)"
+    //           />
+    //         </AreaChart>
+    //       </div>
 
-          {/* Export Button */}
-          <button
-            onClick={handleExport}
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Export Report
-          </button>
-        </div>
-      </div>
-    </div>
+    //       {/* Export Button */}
+    //       <button
+    //         onClick={handleExport}
+    //         className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+    //       >
+    //         Export Report
+    //       </button>
+    //     </div>
+    //   </div>
+    // </div>
   );
 };
 
@@ -634,12 +635,13 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
         >
           <span>Back</span>
         </button>
-        <button
+        {/* ANALYTICS BUTTON */}
+        {/* <button
           onClick={() => setIsAnalyticsPanelOpen(true)}
           className="bg-white rounded-lg px-4 py-2 shadow-lg hover:bg-gray-50 flex items-center gap-2"
         >
           <span>Analytics</span>
-        </button>
+        </button> */}
       </div>
 
       {/* Map legend component (assumed to explain marker colors) */}

@@ -5,4 +5,4 @@ Holds all constants and server settings.
 
 # === SERVER SETTINGS ===
 FLASK_HOST = '0.0.0.0'
-FLASK_PORT = 5001
+FLASK_PORT = 8000
