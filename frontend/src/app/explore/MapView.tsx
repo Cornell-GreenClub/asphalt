@@ -26,7 +26,6 @@ L.Icon.Default.mergeOptions({
     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
 });
 
-
 // define unit conversions
 const convertUnits = {
   distance: {
@@ -45,7 +44,7 @@ const convertUnits = {
 };
 
 /**
- * 
+ *
  * @param route route to calculate distance of, 2d array of latitude longitude
  * @returns distance to nearest integer in kilometers
  */
@@ -61,12 +60,12 @@ const calculateRouteDistance = (route: number[][]) => {
 
 /**
  * MapController adjusts the map view to fit the provided route or coordinates.
- * 
+ *
  * Props:
  * - startCoords: Coordinates object for the start point (lat, lng)
  * - endCoords: Coordinates object for the end point (lat, lng)
  * - route: Array of lat/lng tuples representing the route
- * 
+ *
  * Behavior:
  * - If a route is provided, fit the map to its bounds.
  * - Otherwise, fit the map to the bounds defined by the start and end coordinates.
@@ -92,7 +91,7 @@ const MapController = ({ startCoords, endCoords, route }: any) => {
 
 /**
  * Legend displays a visual guide to map markers and route colors.
- * 
+ *
  * UI Legend includes:
  * - Blue circle: Start point
  * - Red circle: End point
@@ -127,11 +126,11 @@ const Legend = () => {
 
 /**
  * ZoomControls adds custom zoom in/out buttons to the map.
- * 
+ *
  * Behavior:
  * - Zoom in: increases the map's zoom level
  * - Zoom out: decreases the map's zoom level
- * 
+ *
  * Styling ensures visibility and hover feedback.
  */
 const ZoomControls = () => {
@@ -232,7 +231,7 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
     distance: Math.round((optimizedDistance / 6) * (i + 1)),
   }));
 
-    // Extract time information
+  // Extract time information
   const originalTime = formData.time || '6h 30m';
   const optimizedTime = '5h 23m'; //TODO: PLACEHOLDER
 
@@ -558,7 +557,6 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
     return 'orange';
   };
 
-
   return (
     <div className="fixed inset-0 flex">
       <div className="absolute inset-0">
@@ -568,7 +566,6 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
           zoomControl={false}
           style={{ width: '100%', height: '100%' }}
         >
-          
           {/* Tile layer for the map visuals */}
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
@@ -584,12 +581,14 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
 
           {/* Render a marker for each stop, looping over the stops list and returning a marker for each one */}
           {formData.stops.map(
-            (stop: { location: string; coords: { lat: number; lng: number } }, index: number) => {
+            (
+              stop: { location: string; coords: { lat: number; lng: number } },
+              index: number
+            ) => {
               const { lat, lng } = stop.coords || {};
               if (!stop.coords) return null;
-              
-              return (
 
+              return (
                 <Marker
                   key={index}
                   position={[stop.coords.lat, stop.coords.lng]}
@@ -605,17 +604,15 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
                     })
                   }
                 >
-
                   <Popup>
                     {index === 0
                       ? `Start: ${stop.location}`
                       : index === formData.stops.length - 1
-                      ? `End: ${stop.location}`
-                      : `Stop ${index}: ${stop.location}`}
+                        ? `End: ${stop.location}`
+                        : `Stop ${index}: ${stop.location}`}
                   </Popup>
                 </Marker>
-              )
-
+              );
             }
           )}
 
