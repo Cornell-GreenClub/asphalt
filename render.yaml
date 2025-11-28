@@ -19,9 +19,6 @@ services:
     startCommand: "cd frontend && npm start"
     envVars:
       - key: NEXT_PUBLIC_BACKEND_URL
-        fromService:
-          type: web
-          name: asphalt-backend
-          property: host
+        value: https://asphalt-backend.onrender.com
       - key: NEXT_PUBLIC_OSRM_URL
         value: http://100.30.34.94:5000
