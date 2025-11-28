@@ -8,11 +8,13 @@ services:
     envVars:
       - key: OSRM_HOST
         value: http://100.30.34.94:5000
+    plan: free
 
   # Frontend Service
   - type: web
     name: asphalt-frontend
     env: node
+    plan: free
     buildCommand: "cd frontend && npm install && npm run build"
     startCommand: "cd frontend && npm start"
     envVars:
