@@ -152,6 +152,23 @@ const ExplorePage = () => {
     console.log('Updated stops:', formData.stops);
   }, [formData.stops]); // Runs whenever `stops` changes
 
+  // Wake up the backend on load
+  useEffect(() => {
+    const wakeUpBackend = async () => {
+      try {
+        let backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+        if (!backendUrl.startsWith('http')) {
+          backendUrl = `https://${backendUrl}`;
+        }
+        fetch(`${backendUrl}/health`).catch(err => console.log('Wake-up ping failed (expected if offline):', err));
+      } catch (e) {
+        // Ignore errors
+      }
+    };
+    wakeUpBackend();
+  }, []);
+
+
   // define stateful variables for the route, and the current view
   const [route, setRoute] = useState(null);
   const [isMapView, setIsMapView] = useState(false);

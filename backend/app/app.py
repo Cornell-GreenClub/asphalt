@@ -74,6 +74,13 @@ def format_route_url(stops):
     return f"{config.OSRM_HOST}/route/v1/driving/{';'.join(coords_list)}?overview=full&geometries=geojson&steps=false"
 
 
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    """Lightweight endpoint to wake up the server."""
+    return jsonify({"status": "ok"}), 200
+
+
 @app.route("/optimize_route", methods=["POST"])
 def optimize_route():
     if optimizer is None:
