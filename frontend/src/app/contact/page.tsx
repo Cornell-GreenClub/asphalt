@@ -94,7 +94,7 @@ export default function ContactPage() {
                   <a href="mailto:info@asphalt.com" className="asphalt-green asphalt-green-hover underline poppins-regular">
                     shoot us an email
                   </a>
-                  —we'd love to hear from you!
+                  —we&apos;d love to hear from you!
                 </p>
               </div>
             </div>
