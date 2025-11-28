@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
+import BackendWakeup from './components/BackendWakeup';
 
 const poppins = localFont({
   src: './fonts/Poppins/Poppins-Regular.ttf',
@@ -44,6 +45,7 @@ export default function RootLayout({
           className={`${poppins.variable} ${poppinsBold.variable} ${poppinsMedium.variable} ${poppinsExtraBold.variable} ${poppinsSemibold.variable} antialiased`}
         >
           {children}
+          <BackendWakeup />
         </body>
       </html>
     </>

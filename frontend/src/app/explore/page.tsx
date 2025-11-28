@@ -152,21 +152,7 @@ const ExplorePage = () => {
     console.log('Updated stops:', formData.stops);
   }, [formData.stops]); // Runs whenever `stops` changes
 
-  // Wake up the backend on load
-  useEffect(() => {
-    const wakeUpBackend = async () => {
-      try {
-        let backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
-        if (!backendUrl.startsWith('http')) {
-          backendUrl = `https://${backendUrl}`;
-        }
-        fetch(`${backendUrl}/health`).catch(err => console.log('Wake-up ping failed (expected if offline):', err));
-      } catch (e) {
-        // Ignore errors
-      }
-    };
-    wakeUpBackend();
-  }, []);
+
 
 
   // define stateful variables for the route, and the current view
@@ -176,6 +162,7 @@ const ExplorePage = () => {
     Array(formData.stops.length).fill(false)
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Optimizing...');
 
   // Add these computed values
   const startCoords = formData.stops[0]?.coords || null;
@@ -267,6 +254,13 @@ const ExplorePage = () => {
   // Reusable route generation logic, calling the backend
   const optimizeRoute = async () => {
     setIsLoading(true);
+    setLoadingMessage('Optimizing...');
+    
+    // Set a timeout to change the message if it takes too long (e.g., cold start)
+    const timeoutId = setTimeout(() => {
+      setLoadingMessage('Waking up server...');
+    }, 15000); // 15 seconds
+
     try {
       let backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
       if (!backendUrl.startsWith('http')) {
@@ -299,7 +293,9 @@ const ExplorePage = () => {
     } catch (err) {
       console.error('Error calling backend:', err);
     } finally {
+      clearTimeout(timeoutId);
       setIsLoading(false);
+      setLoadingMessage('Optimizing...'); // Reset for next time
     }
   };
 
@@ -504,6 +500,7 @@ const ExplorePage = () => {
                               return arr;
                             });
                           }}
+                          hasValidCoords={!!stop.coords}
                         />
                       </div>
                       {/* Remove button for intermediate stops */}
@@ -611,7 +608,7 @@ const ExplorePage = () => {
                   {isLoading ? (
                     <>
                       <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                      <span>Optimizing...</span>
+                      <span>{loadingMessage}</span>
                     </>
                   ) : (
                     'Optimize Route'

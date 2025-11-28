@@ -22,7 +22,9 @@ interface PlacesAutocompleteProps {
   inputClassName?: string;
   placeholder?: string;
   onDropdownVisibilityChange?: (visible: boolean) => void;
+  hasValidCoords?: boolean;
 }
+
 
 const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
   value,
@@ -31,6 +33,7 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
   inputClassName,
   placeholder,
   onDropdownVisibilityChange,
+  hasValidCoords,
 }) => {
   const [suggestions, setSuggestions] = useState<Place[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -87,8 +90,11 @@ const PlacesAutocomplete: React.FC<PlacesAutocompleteProps> = ({
   );
 
   useEffect(() => {
+    if (hasValidCoords) {
+      return;
+    }
     searchPlacesRef.current(value);
-  }, [value]);
+  }, [value, hasValidCoords]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
