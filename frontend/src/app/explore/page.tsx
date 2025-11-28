@@ -256,7 +256,6 @@ const ExplorePage = () => {
     setIsLoading(true);
     setLoadingMessage('Optimizing...');
     
-    // Set a timeout to change the message if it takes too long (e.g., cold start)
     const timeoutId = setTimeout(() => {
       setLoadingMessage('Waking up server...');
     }, 15000); // 15 seconds
@@ -295,7 +294,7 @@ const ExplorePage = () => {
     } finally {
       clearTimeout(timeoutId);
       setIsLoading(false);
-      setLoadingMessage('Optimizing...'); // Reset for next time
+      setLoadingMessage('Optimizing...');
     }
   };
 
