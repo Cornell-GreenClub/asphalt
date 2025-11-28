@@ -89,8 +89,8 @@ const presetRoute = {
     },
   ],
   maintainOrder: false,
-  currentFuel: 40.0,
-  time: 80.0,
+  currentFuel: '40.0',
+  time: '80.0',
   vehicleNumber: 'BUS-001',
 };
 
@@ -142,9 +142,9 @@ const ExplorePage = () => {
       { location: '', coords: null as Coords | null }, // End
     ],
     maintainOrder: false,
-    currentFuel: '',
-    time: '',
-    vehicleNumber: '',
+    currentFuel: '40.0',
+    time: '80.0',
+    vehicleNumber: 'BUS-001',
   });
 
   //debug whenever formData.stops updates
@@ -158,6 +158,7 @@ const ExplorePage = () => {
   const [dropdownVisible, setDropdownVisible] = useState(
     Array(formData.stops.length).fill(false)
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   // Add these computed values
   const startCoords = formData.stops[0]?.coords || null;
@@ -230,7 +231,7 @@ const ExplorePage = () => {
         .join(';');
 
       const response = await fetch(
-        `https://127.0.0.1:5000/route/v1/driving/${coordinates}?overview=full&geometries=geojson`
+        `${process.env.NEXT_PUBLIC_OSRM_URL || 'http://127.0.0.1:5001'}/route/v1/driving/${coordinates}?overview=full&geometries=geojson`
       );
       const data = await response.json();
       if (data.routes && data.routes.length > 0) {
@@ -248,8 +249,9 @@ const ExplorePage = () => {
 
   // Reusable route generation logic, calling the backend
   const optimizeRoute = async () => {
+    setIsLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/optimize_route', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'}/optimize_route`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -274,6 +276,8 @@ const ExplorePage = () => {
       setIsMapView(true);
     } catch (err) {
       console.error('Error calling backend:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -510,6 +514,7 @@ const ExplorePage = () => {
                     Load sample schools route
                   </button>
                 </div>
+                {/* 
                 <div className="flex items-center w-full -mt-4 mb-4">
                   <input
                     id="maintainOrder"
@@ -526,6 +531,8 @@ const ExplorePage = () => {
                     The stops are in the order they are currently operating
                   </label>
                 </div>
+                */}
+                {/* Vehicle Inputs Hidden
                 <div className="w-full flex flex-col gap-2 mt-10">
                   <h3 className="text-4xl text-center mb-2 text-gray-800 poppins-bold">
                     Tell Us About Your{' '}
@@ -573,11 +580,20 @@ const ExplorePage = () => {
                     </div>
                   </div>
                 </div>
+                */}
                 <button
                   type="submit"
-                  className="w-full bg-[#034626] hover:bg-[#023219] text-white poppins-semibold text-xl py-2 px-4 rounded-xl transform transition-all hover:scale-105 -mt-1"
+                  disabled={isLoading}
+                  className={`w-full bg-[#034626] hover:bg-[#023219] text-white poppins-semibold text-xl py-2 px-4 rounded-xl transform transition-all hover:scale-105 -mt-1 flex justify-center items-center gap-2 ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
                 >
-                  Optimize Route
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                      <span>Optimizing...</span>
+                    </>
+                  ) : (
+                    'Optimize Route'
+                  )}
                 </button>
               </form>
             </div>

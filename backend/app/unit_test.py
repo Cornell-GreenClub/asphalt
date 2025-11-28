@@ -85,7 +85,7 @@ def test_optimizer():
     """
     Sends the fake data to the running Flask server and prints the response.
     """
-    url = "http://127.0.0.1:8000/reorder_stops"
+    url = "http://127.0.0.1:8000/optimize_route"
     
     try:
         response = requests.post(url, json=sample_stops)

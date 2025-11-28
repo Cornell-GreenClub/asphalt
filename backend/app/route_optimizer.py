@@ -4,6 +4,7 @@ Main route optimization class.
 2. Compares fuel cost (distance / mpg) of original vs. optimized route.
 """
 import numpy as np
+import logging
 from ortools.constraint_solver import routing_enums_pb2, pywrapcp
 
 # --- Constants for conversion ---
@@ -16,12 +17,12 @@ class RouteOptimizer:
         """
         Initializes the optimizer. This is a stateless class.
         """
-        print("Initializing RouteOptimizer (API-Only, Distance/MPG)...")
+        logging.info("Initializing RouteOptimizer (API-Only, Distance/MPG)...")
         self.config = config
         
         # Make the solver time limit configurable, default to 10 seconds
         self.solver_time_limit_seconds = int(config.get("SOLVER_TIME_LIMIT", 10))
-        print(f"--- Optimizer is ready (Search Strategy: GUIDED_LOCAL_SEARCH, Time Limit: {self.solver_time_limit_seconds}s) ---")
+        logging.info(f"--- Optimizer is ready (Search Strategy: GUIDED_LOCAL_SEARCH, Time Limit: {self.solver_time_limit_seconds}s) ---")
 
     def optimize_route(self, api_response, mpg):
         """
@@ -35,15 +36,16 @@ class RouteOptimizer:
             index_to_location_name = location_names
 
         except KeyError as e:
-            print(f"Error: API response missing required key: {e}")
+            logging.error(f"Error: API response missing required key: {e}")
             return None
         except (ValueError, TypeError):
-            print(f"Error: Invalid 'mpg' value. Must be a number.")
+            logging.error(f"Error: Invalid 'mpg' value. Must be a number.")
             return None
         
         if len(index_to_location_name) <= 2:
-            print("Route has 2 or fewer stops. No optimization needed.")
-            return stops_list
+            logging.info("Route has 2 or fewer stops. No optimization needed.")
+            # Return indices for a simple round trip: 0 -> 1 -> 0
+            return self._get_original_route_indices(len(index_to_location_name))
 
         # 2. Format the matrix for the OR-Tools solver (using METERS as cost)
         tsp_data = self._format_tsp_for_distance(distance_matrix_meters)
@@ -52,17 +54,15 @@ class RouteOptimizer:
         opt_route_indices = self._solve_tsp(tsp_data, index_to_location_name)
         
         if not opt_route_indices:
-            print("Solver failed to find a solution.")
+            logging.warning("Solver failed to find a solution.")
             return None
 
         # 4. Calculate and print all cost comparisons
-        print("\n--- Cost Analysis (Distance & Fuel) ---")
+        logging.info("\n--- Cost Analysis (Distance & Fuel) ---")
         self._calculate_and_print_costs(opt_route_indices, index_to_location_name, distance_matrix_meters, mpg)
         
-        # 5. Re-order the original stops list and return it
-        reordered_stops_list = self._apply_order(stops_list, opt_route_indices)
-        
-        return reordered_stops_list
+        # 5. Return the optimized route indices
+        return opt_route_indices
 
     def _format_tsp_for_distance(self, distance_matrix_meters):
         """
@@ -127,18 +127,18 @@ class RouteOptimizer:
         # Uncomment this to see the solver's log
         # search_parameters.log_search = True
         
-        print(f"\nSolving TSP with GUIDED_LOCAL_SEARCH (Time limit: {self.solver_time_limit_seconds}s)...")
+        logging.info(f"\nSolving TSP with GUIDED_LOCAL_SEARCH (Time limit: {self.solver_time_limit_seconds}s)...")
         solution = routing.SolveWithParameters(search_parameters)
 
         if solution:
-            print("\n--- Distance Optimization Results ---")
+            logging.info("\n--- Distance Optimization Results ---")
             obj_meters = solution.ObjectiveValue()
             obj_km = obj_meters / METERS_PER_KM
-            print(f"Solver objective value (Total Distance): {obj_km:.2f} km")
+            logging.info(f"Solver objective value (Total Distance): {obj_km:.2f} km")
             
             return self._get_route_from_solution(manager, routing, solution, index_to_location_name)
         else:
-            print("No solution found!")
+            logging.warning("No solution found!")
             return []
 
     def _get_route_from_solution(self, manager, routing, solution, index_to_location_name):
@@ -157,7 +157,7 @@ class RouteOptimizer:
         route_indices.append(node_index)
         plan_output += f" {index_to_location_name[node_index]}\n"
         
-        print(plan_output)
+        logging.info(plan_output)
         return route_indices
 
     def _get_route_cost_km(self, route_indices, distance_matrix_meters):
@@ -191,45 +191,34 @@ class RouteOptimizer:
         optimized_distance_km = self._get_route_cost_km(opt_route_indices, distance_matrix_meters)
 
         # --- Print Distance Analysis ---
-        print(f"Original Route Distance (Sequential): {original_distance_km:.2f} km")
-        print(f"Optimized Route Distance: {optimized_distance_km:.2f} km")
+        logging.info(f"Original Route Distance (Sequential): {original_distance_km:.2f} km")
+        logging.info(f"Optimized Route Distance: {optimized_distance_km:.2f} km")
         
         if optimized_distance_km < original_distance_km:
             savings_km = original_distance_km - optimized_distance_km
             percent_saved_km = (savings_km / original_distance_km) * 100
-            print(f"Optimization SAVED {savings_km:.2f} km ({percent_saved_km:.2f}%)")
+            logging.info(f"Optimization SAVED {savings_km:.2f} km ({percent_saved_km:.2f}%)")
 
-        print("\n--- Fuel Cost Analysis (Distance / MPG) ---")
+        logging.info("\n--- Fuel Cost Analysis (Distance / MPG) ---")
         if mpg <= 0:
-            print("MPG value is zero or negative. Skipping fuel cost analysis.")
+            logging.warning("MPG value is zero or negative. Skipping fuel cost analysis.")
             return
         
         try:
             # --- Original Route Fuel Cost ---
             original_distance_miles = original_distance_km * MILES_PER_KM
             original_gallons = original_distance_miles / mpg
-            print(f"Original Route Fuel Cost: {original_gallons:.2f} gallons ({original_distance_miles:.2f} miles / {mpg} mpg)")
+            logging.info(f"Original Route Fuel Cost: {original_gallons:.2f} gallons ({original_distance_miles:.2f} miles / {mpg} mpg)")
 
             # --- Optimized Route Fuel Cost ---
             optimized_distance_miles = optimized_distance_km * MILES_PER_KM
             optimized_gallons = optimized_distance_miles / mpg
-            print(f"OptimZized Route Fuel Cost: {optimized_gallons:.2f} gallons ({optimized_distance_miles:.2f} miles / {mpg} mpg)")
+            logging.info(f"Optimized Route Fuel Cost: {optimized_gallons:.2f} gallons ({optimized_distance_miles:.2f} miles / {mpg} mpg)")
             
             if optimized_gallons < original_gallons:
                 savings_gal = original_gallons - optimized_gallons
                 percent_saved_gal = (savings_gal / original_gallons) * 100
-                print(f"Optimization SAVED {savings_gal:.2f} gallons ({percent_saved_gal:.2f}%)")
+                logging.info(f"Optimization SAVED {savings_gal:.2f} gallons ({percent_saved_gal:.2f}%)")
             
         except Exception as e:
-            print(f"Error during fuel cost comparison: {e}")
-
-    def _apply_order(self, original_list, solution_indices):
-        """
-        Reorders the original list of stops based on the solver's index list.
-        """
-        original_stops_map = {i: stop for i, stop in enumerate(original_list)}
-        reordered_list = []
-        for idx in solution_indices:
-            if idx in original_stops_map:
-                reordered_list.append(original_stops_map[idx])
-        return reordered_list
+            logging.error(f"Error during fuel cost comparison: {e}")

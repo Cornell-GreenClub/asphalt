@@ -6,9 +6,17 @@ Receives an API-style JSON object, optionally optimizes the route via your Route
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import logging
 import requests
 import config
 from route_optimizer import RouteOptimizer
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -16,24 +24,23 @@ CORS(app)
 try:
     optimizer = RouteOptimizer(app.config)
 except Exception as e:
-    print(f"[FATAL] Could not initialize RouteOptimizer: {e}")
+    logging.critical(f"Could not initialize RouteOptimizer: {e}")
     optimizer = None
 
-OSRM_HOST = "http://127.0.0.1:5000" 
 
 
 def print_stops(label, stops):
     """Nicely print a list of stops with coordinates."""
-    print("\n" + "=" * 60)
-    print(f"{label}")
-    print("=" * 60)
+    logging.info("=" * 60)
+    logging.info(f"{label}")
+    logging.info("=" * 60)
     for i, s in enumerate(stops):
         loc = s.get("location", "No Name")
         coords = s.get("coords", {})
         lat = coords.get("lat")
         lng = coords.get("lng")
-        print(f"{i+1}. {loc}  |  lat: {lat}, lng: {lng}")
-    print("=" * 60 + "\n")
+        logging.info(f"{i+1}. {loc}  |  lat: {lat}, lng: {lng}")
+    logging.info("=" * 60)
 
 
 def normalize_stops_for_printing(stops):
@@ -58,13 +65,13 @@ def format_table_url(stops):
         if c is None or "lat" not in c or "lng" not in c:
             raise ValueError("All stops must include coords with lat and lng.")
         coords_list.append(f"{c['lng']},{c['lat']}")
-    return f"{OSRM_HOST}/table/v1/driving/{';'.join(coords_list)}?annotations=distance,duration"
+    return f"{config.OSRM_HOST}/table/v1/driving/{';'.join(coords_list)}?annotations=distance,duration"
 
 
 def format_route_url(stops):
     """Build OSRM route API URL for ordered stops with GeoJSON overview."""
     coords_list = [f"{s['coords']['lng']},{s['coords']['lat']}" for s in stops]
-    return f"{OSRM_HOST}/route/v1/driving/{';'.join(coords_list)}?overview=full&geometries=geojson&steps=false"
+    return f"{config.OSRM_HOST}/route/v1/driving/{';'.join(coords_list)}?overview=full&geometries=geojson&steps=false"
 
 
 @app.route("/optimize_route", methods=["POST"])
@@ -104,38 +111,31 @@ def optimize_route():
             mpg_val = float(payload.get("currentFuel", 20.0))
             reordered = optimizer.optimize_route(table_data, mpg_val)
 
+            # --- PRINT RAW OPTIMIZER OUTPUT ---
+            logging.info("=== OPTIMIZER RAW OUTPUT ===")
+            logging.info(reordered)
+            logging.info("============================")
+
             # --- Map optimizer output ---
-            if maintain_order:
-                ordered_stops = stops
-            else:
-                mpg_val = float(payload.get("currentFuel", 20.0))
-                reordered = optimizer.optimize_route(table_data, mpg_val)
-
-                # --- PRINT RAW OPTIMIZER OUTPUT ---
-                print("\n=== OPTIMIZER RAW OUTPUT ===")
-                print(reordered)
-                print("============================\n")
-
-                # --- Map optimizer output ---
-                ordered_stops = []
-                if isinstance(reordered, list):
-                    # If elements are dicts with coords, use them directly
-                    if len(reordered) > 0 and isinstance(reordered[0], dict) and "coords" in reordered[0]:
-                        ordered_stops = reordered
-                    # If elements are ints, treat as indices
-                    elif all(isinstance(x, int) for x in reordered):
-                        ordered_stops = [stops[i] for i in reordered]
-                    # If elements are strings representing indices
-                    else:
-                        try:
-                            idxs = [int(x) for x in reordered]
-                            ordered_stops = [stops[i] for i in idxs]
-                        except Exception:
-                            print("[WARN] Could not parse optimizer output. Printing original stops as fallback.")
-                            ordered_stops = stops
+            ordered_stops = []
+            if isinstance(reordered, list):
+                # If elements are dicts with coords, use them directly
+                if len(reordered) > 0 and isinstance(reordered[0], dict) and "coords" in reordered[0]:
+                    ordered_stops = reordered
+                # If elements are ints, treat as indices
+                elif all(isinstance(x, int) for x in reordered):
+                    ordered_stops = [stops[i] for i in reordered]
+                # If elements are strings representing indices
                 else:
-                    print("[WARN] Optimizer output not a list. Printing original stops as fallback.")
-                    ordered_stops = stops
+                    try:
+                        idxs = [int(x) for x in reordered]
+                        ordered_stops = [stops[i] for i in idxs]
+                    except Exception:
+                        logging.warning("Could not parse optimizer output. Printing original stops as fallback.")
+                        ordered_stops = stops
+            else:
+                logging.warning("Optimizer output not a list. Printing original stops as fallback.")
+                ordered_stops = stops
 
 
 
@@ -161,10 +161,10 @@ def optimize_route():
         })
 
     except Exception as e:
-        print(f"[ERROR] Exception in /optimize_route: {e}")
+        logging.error(f"Exception in /optimize_route: {e}")
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 
 if __name__ == "__main__":
-    print(f"[INFO] Starting Flask server on {config.FLASK_HOST}:{config.FLASK_PORT}")
+    logging.info(f"Starting Flask server on {config.FLASK_HOST}:{config.FLASK_PORT}")
     app.run(debug=True, host=config.FLASK_HOST, port=config.FLASK_PORT)
