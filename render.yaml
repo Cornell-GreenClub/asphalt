@@ -10,15 +10,4 @@ services:
         value: http://100.30.34.94:5000
     plan: free
 
-  # Frontend Service
-  - type: web
-    name: asphalt-frontend
-    env: node
-    plan: free
-    buildCommand: "cd frontend && npm install && npm run build"
-    startCommand: "cd frontend && npm start"
-    envVars:
-      - key: NEXT_PUBLIC_BACKEND_URL
-        value: https://asphalt-backend.onrender.com
-      - key: NEXT_PUBLIC_OSRM_URL
-        value: http://100.30.34.94:5000
+
