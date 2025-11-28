@@ -7,7 +7,7 @@ services:
     startCommand: "cd backend/app && gunicorn -w 4 -b 0.0.0.0:$PORT app:app"
     envVars:
       - key: OSRM_HOST
-        sync: false
+        value: http://100.30.34.94:5000
 
   # Frontend Service
   - type: web
@@ -22,4 +22,4 @@ services:
           name: asphalt-backend
           property: url
       - key: NEXT_PUBLIC_OSRM_URL
-        sync: false
+        value: http://100.30.34.94:5000
