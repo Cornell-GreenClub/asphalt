@@ -20,6 +20,6 @@ services:
         fromService:
           type: web
           name: asphalt-backend
-          property: url
+          property: host
       - key: NEXT_PUBLIC_OSRM_URL
         value: http://100.30.34.94:5000
