@@ -27,7 +27,7 @@ const AboutPage = () => {
 
           <div className="w-full md:w-1/2 p-4 flex items-center justify-center">
             <img
-              src="/images/temp_image1.png"
+              src="/images/asphalt-subteam.jpg"
               alt="Temporary Image"
               className="max-w-full h-auto transform transition-all duration-300 hover:scale-105"
             />
