@@ -6,12 +6,12 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50 border pl-[22px] pr-[22px]">
-      <div className="w-full flex justify-between items-center p-4">
+    <nav className="bg-white shadow-md sticky top-0 z-50 border px-4 md:px-[22px]">
+      <div className="w-full flex justify-between items-center p-2 md:p-4">
         {/* Logo */}
         <Link href="/" className="text-gray-800 text-2xl font-bold">
           <img
-            className="w-[93.88] h-[82px]"
+            className="w-auto h-12 md:h-[82px] md:w-[93.88px]"
             src="/images/logoo.png"
             alt="Asphalt Logo"
           />

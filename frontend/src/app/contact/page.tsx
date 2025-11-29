@@ -91,7 +91,7 @@ export default function ContactPage() {
                 </div>
                 <p className="mt-4 text-base text-gray-700 poppins-regular font-normal">
                   Have a question or want to get in touch? Just fill out the form or{' '}
-                  <a href="mailto:info@asphalt.com" className="asphalt-green asphalt-green-hover underline poppins-regular">
+                  <a href="mailto:pathos.earth@gmail.com" className="asphalt-green asphalt-green-hover underline poppins-regular">
                     shoot us an email
                   </a>
                   —we&apos;d love to hear from you!

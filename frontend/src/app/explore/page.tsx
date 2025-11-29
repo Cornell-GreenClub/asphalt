@@ -406,6 +406,9 @@ const ExplorePage = () => {
                   Sustainability
                 </span>
               </h1>
+              <p className="text-gray-600 text-sm italic -mt-6 mb-8 poppins-regular">
+                *We currently only support routes within the state of New York
+              </p>
               <form
                 onSubmit={handleSubmit}
                 className="w-full flex flex-col items-center gap-8"

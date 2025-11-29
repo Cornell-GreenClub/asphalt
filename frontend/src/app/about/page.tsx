@@ -38,7 +38,7 @@ const AboutPage = () => {
         <section className="flex flex-col md:flex-row justify-center p-[49px] pt-[97px]">
           <div className="w-full md:w-1/2 p-4 flex items-center justify-center">
             <img
-              src="/images/temp_image2.png"
+              src="/images/asphalt-graphic.png"
               alt="Temporary Image"
               className="max-w-full h-auto transform transition-all duration-300 hover:scale-105"
             />

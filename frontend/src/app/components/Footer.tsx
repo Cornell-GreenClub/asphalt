@@ -55,7 +55,7 @@ export default function Footer() {
           <ul className="text-base poppins-regular space-y-2">
             <li>
               <Link
-                href="mailto:info@asphalt.com"
+                href="mailto:pathos.earth@gmail.com"
                 className="hover:text-gray-800 transition-colors"
               >
                 <img
@@ -63,7 +63,7 @@ export default function Footer() {
                   alt="Email"
                   className="inline-block w-[32px] h-[32px] mr-2 align-text-bottom"
                 />
-                info@asphalt.com
+                pathos.earth@gmail.com
               </Link>
             </li>
             <li>
