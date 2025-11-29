@@ -10,13 +10,13 @@ export default function HomePage() {
       <Navbar />
       <div className="max-w-screen-full mx-auto">
         {/* Hero Section */}
-        <section className="mb-24 flex flex-col p-8 md:flex-row items-center justify-center h-[calc(100vh-8rem)] bg-gradient-to-t from-[#D3F7E0] to-white">
-          <div className="md:w-1/2 p-12 text-left">
+        <section className="mb-24 flex flex-col p-8 md:flex-row items-center justify-center min-h-[calc(100vh-8rem)] bg-gradient-to-t from-[#D3F7E0] to-white">
+          <div className="md:w-1/2 p-4 md:p-12 text-left">
             <div>
-              <h1 className="text-7xl font-extrabold mb-8 animate-fade-in-down text-gray-900">
+              <h1 className="text-4xl md:text-7xl font-extrabold mb-8 animate-fade-in-down text-gray-900">
                 <span className="poppins-extrabold">ASPHALT</span>
                 <br />
-                <div className="poppins-medium text-6xl text-gray-800">
+                <div className="poppins-medium text-3xl md:text-6xl text-gray-800">
                   <span className="asphalt-green">Smarter</span> Routes,
                   <br />
                   Greener <span className="asphalt-green">Future</span>
