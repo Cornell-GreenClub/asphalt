@@ -127,7 +127,14 @@ def main():
     # 3. Run Optimizer
     optimizer = RouteOptimizer({"SOLVER_TIME_LIMIT": 10})
     print(f"Optimizing route (Distance Only)...")
-    optimizer.optimize_route(table_data, mpg=0)
+    # We know TST BOCES burns 246 L per week (5 trips)
+    
+    # Inject original location names into the OSRM response so the optimizer prints them
+    if table_data and 'sources' in table_data:
+        for i, source in enumerate(table_data['sources']):
+            source['name'] = stops[i]['location']
+
+    optimizer.optimize_route(table_data, mpg=3.65873553349)
 
 if __name__ == "__main__":
     main()

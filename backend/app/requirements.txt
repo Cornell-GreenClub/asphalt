@@ -4,3 +4,4 @@ numpy
 ortools
 gunicorn
 requests
+locust

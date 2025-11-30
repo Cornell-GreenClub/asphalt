@@ -115,14 +115,14 @@ class RouteOptimizer:
         # --- Set the Guided Local Search strategy ---
         # This is a more advanced metaheuristic that allows the solver
         # to escape local minima and find a better global solution.
-        search_parameters.local_search_metaheuristic = (
-            routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
-        )
+        # search_parameters.local_search_metaheuristic = (
+        #     routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+        # )
         
         # --- Set the time limit ---
         # This strategy *requires* a time limit to know when to stop.
         # We use the value set in the __init__ method.
-        search_parameters.time_limit.seconds = self.solver_time_limit_seconds
+        # search_parameters.time_limit.seconds = self.solver_time_limit_seconds
         
         # Uncomment this to see the solver's log
         # search_parameters.log_search = True
