@@ -114,6 +114,14 @@ def optimize_route():
             table_resp = requests.get(table_url, timeout=10)
             table_data = table_resp.json()
 
+            # Inject original location names into the OSRM response so the optimizer prints them
+            # (Matches logic in calculate_sample_savings.py)
+            if table_data and 'sources' in table_data:
+                for i, source in enumerate(table_data['sources']):
+                    # OSRM sources correspond to the input coordinates order
+                    if i < len(stops):
+                        source['name'] = stops[i].get('location', 'Unknown')
+
             # --- Call RouteOptimizer ---
             mpg_val = float(payload.get("currentFuel", 20.0))
             reordered = optimizer.optimize_route(table_data, mpg_val)
