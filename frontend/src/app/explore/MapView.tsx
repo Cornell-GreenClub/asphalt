@@ -105,11 +105,7 @@ const Legend = () => {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-          <span>Start Point</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-          <span>End Point</span>
+          <span>Start/End Stop</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
@@ -552,7 +548,7 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
    * - Intermediate stops: orange
    */
   const getMarkerColor = (index: number, total: number) => {
-    if (index === 0 || index === 1) return 'blue';
+    if (index === 0) return 'blue';
     if (index === total - 1) return 'red';
     return 'orange';
   };
@@ -588,6 +584,9 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
               const { lat, lng } = stop.coords || {};
               if (!stop.coords) return null;
 
+              // Skip the last marker since it's the same as the start (closed loop)
+              if (index === formData.stops.length - 1) return null;
+
               return (
                 <Marker
                   key={index}
@@ -606,10 +605,8 @@ const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
                 >
                   <Popup>
                     {index === 0
-                      ? `Start: ${stop.location}`
-                      : index === formData.stops.length - 1
-                        ? `End: ${stop.location}`
-                        : `Stop ${index}: ${stop.location}`}
+                      ? `Start/End: ${stop.location}`
+                      : `Stop ${index}: ${stop.location}`}
                   </Popup>
                 </Marker>
               );
