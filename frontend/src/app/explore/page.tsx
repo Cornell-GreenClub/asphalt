@@ -20,36 +20,36 @@ const presetRoute = {
   stops: [
     {
       location: 'TST BOCES, 555 Warren Road, Northeast Ithaca, NY 14850',
-      coords: { lat: 42.4808, lng: -76.457 },
+      coords: { lat: 42.476169, lng: -76.465092 },
     },
     {
       location: 'Dewitt Middle School, 560 Warren Road, Ithaca, NY 14850',
-      coords: { lat: 42.4803, lng: -76.4566 },
+      coords: { lat: 42.475434, lng: -76.468026 },
     },
     {
       location:
         'Northeast Elementary School, 425 Winthrop Dr, Ithaca, NY 14850',
-      coords: { lat: 42.4775, lng: -76.4647 },
+      coords: { lat: 42.472932, lng: -76.468742 },
     },
     {
       location:
         'Cayuga Heights Elementary School, 110 E Upland Rd, Ithaca, NY 14850',
-      coords: { lat: 42.4697, lng: -76.4791 },
+      coords: { lat: 42.465637, lng: -76.488499 },
     },
     {
       location:
         'Belle Sherman Elementary School, Valley Road, Ithaca, NY 14853',
-      coords: { lat: 42.4478, lng: -76.4766 },
+      coords: { lat: 42.435757, lng: -76.481317 },
     },
     {
       location:
         'Caroline Elementary School, Slaterville Road, Besemer, NY 14881',
-      coords: { lat: 42.3839, lng: -76.4165 },
+      coords: { lat: 42.392593, lng: -76.3715585 },
     },
     {
       location:
         'South Hill Elementary School, 520 Hudson Street, Ithaca, NY 14850',
-      coords: { lat: 42.4336, lng: -76.495 },
+      coords: { lat: 42.4338533, lng: -76.4931807 },
     },
     {
       location:
@@ -58,34 +58,34 @@ const presetRoute = {
     },
     {
       location: 'Fall Creek School, Linn Street, Ithaca, NY 14850',
-      coords: { lat: 42.4527, lng: -76.4869 },
+      coords: { lat: 42.4415514, lng: -76.5021644 },
     },
     {
       location:
         'Boynton Middle School, 1601 North Cayuga Street, Ithaca, NY 14850',
-      coords: { lat: 42.4624, lng: -76.4921 },
+      coords: { lat: 42.4606674, lng: -76.500035 },
     },
     {
       location: '602 Hancock Street, Ithaca, NY 14850',
-      coords: { lat: 42.4808, lng: -76.457 },
+      coords: { lat: 42.4460873, lng: -76.5065422 },
     },
     {
       location: '737 Willow Ave, Ithaca, NY 14850',
-      coords: { lat: 42.4445, lng: -76.5097 },
+      coords: { lat: 42.453183, lng: -76.5053133 },
     },
     {
       location: 'Enfield School, 20 Enfield Main Road, Ithaca, NY 14850',
-      coords: { lat: 42.4436, lng: -76.5491 },
+      coords: { lat: 42.449517, lng: -76.6316132 },
     },
     {
       location:
         'Lehmann Alternative Community School, 111 Chestnut Street, Ithaca, NY',
-      coords: { lat: 42.4506, lng: -76.515 },
+      coords: { lat: 42.440077, lng: -76.5177744 },
     },
     {
       location:
         'Recycling and Solid Waste Center, 160 Commercial Avenue, Ithaca, NY',
-      coords: { lat: 42.4461, lng: -76.5138 },
+      coords: { lat: 42.4242689, lng: -76.5159428 },
     },
   ],
   maintainOrder: false,
@@ -96,7 +96,7 @@ const presetRoute = {
 
 /**
  *
- * Renders the explore page, handlilng changes to input. Enables MapView when a route is submitted.
+ * Renders the explore page, handling changes to input. Enables MapView when a route is submitted.
  *
  */
 const ExplorePage = () => {
