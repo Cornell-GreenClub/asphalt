@@ -12,6 +12,7 @@
     "@react-google-maps/api": "^2.20.3",
     "@types/leaflet": "^1.9.14",
     "@types/lodash": "^4.17.13",
+    "@vercel/analytics": "^1.6.1",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.21",
     "lucide-react": "^0.454.0",

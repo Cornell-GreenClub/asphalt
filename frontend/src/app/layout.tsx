@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Analytics } from "@vercel/analytics/next";
 import localFont from 'next/font/local';
 import './globals.css';
 import BackendWakeup from './components/BackendWakeup';
@@ -46,6 +47,7 @@ export default function RootLayout({
         >
           {children}
           <BackendWakeup />
+          <Analytics />
         </body>
       </html>
     </>
