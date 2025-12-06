@@ -407,9 +407,8 @@ const ExplorePage = () => {
                 </span>
               </h1>
               <p className="text-gray-600 text-sm italic -mt-6 mb-8 poppins-regular">
-                *We currently only support routes within the state of New York
-                <br />
-                *Our backend is offline over winter break to save money
+                {/* *We currently only support routes within the state of New York */}
+                *Backend is offline to reduce costs over winter break
               </p>
               <form
                 onSubmit={handleSubmit}
