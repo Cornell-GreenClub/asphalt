@@ -8,4 +8,4 @@ import os
 # === SERVER SETTINGS ===
 FLASK_HOST = '0.0.0.0'
 FLASK_PORT = int(os.environ.get('PORT', 8000))
-OSRM_HOST = os.environ.get('OSRM_HOST', "http://100.30.34.94:5000")
+OSRM_HOST = os.environ.get('OSRM_HOST', "http://127.0.0.1:5000")
