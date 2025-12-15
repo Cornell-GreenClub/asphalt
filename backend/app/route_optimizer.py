@@ -16,6 +16,7 @@ class RouteOptimizer:
     def __init__(self, config):
         """
         Initializes the optimizer. This is a stateless class.
+        It loads configuration but does not store request-specific data.
         """
         logging.info("Initializing RouteOptimizer (API-Only, Distance/MPG)...")
         self.config = config
@@ -27,6 +28,13 @@ class RouteOptimizer:
     def optimize_route(self, api_response, mpg):
         """
         High-level function to find the optimal route.
+        
+        Steps:
+        1. Parse OSRM distance matrix.
+        2. Format data for OR-Tools (convert to integer cost matrix).
+        3. Solve TSP using OR-Tools RoutingModel.
+        4. Calculate savings (distance/fuel) compared to original order.
+        5. Return list of indices representing the optimized order.
         """
         try:
             # 1. Extract all data from the API response
@@ -90,6 +98,9 @@ class RouteOptimizer:
         """
         Runs the Google OR-Tools TSP solver.
         Returns the optimized route indices.
+        
+        This uses a RoutingModel which is a specialized solver for vehicle routing problems.
+        It attempts to minimize the total cost (distance) of visiting all nodes and returning to start.
         """
         manager = pywrapcp.RoutingIndexManager(
             len(data["cost_matrix"]), data["num_vehicles"], data["depot"]

@@ -136,6 +136,8 @@ const ExplorePage = () => {
   =========================================================*/
 
   // define a stateful variable formdata holding necessary data to display
+  // formData: Holds the user's input for stops, fuel info, and vehicle details.
+  // This state is the source of truth for the optimization request.
   const [formData, setFormData] = useState({
     stops: [
       { location: '', coords: null as Coords | null }, // Start
@@ -156,12 +158,12 @@ const ExplorePage = () => {
 
 
   // define stateful variables for the route, and the current view
-  const [route, setRoute] = useState(null);
-  const [isMapView, setIsMapView] = useState(false);
+  const [route, setRoute] = useState(null); // Stores the optimized route geometry (polyline)
+  const [isMapView, setIsMapView] = useState(false); // Toggles between the input form and the map view
   const [dropdownVisible, setDropdownVisible] = useState(
     Array(formData.stops.length).fill(false)
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state for the optimization request
   const [loadingMessage, setLoadingMessage] = useState('Optimizing...');
 
   // Add these computed values
@@ -252,6 +254,12 @@ const ExplorePage = () => {
   };
 
   // Reusable route generation logic, calling the backend
+  // optimizeRoute:
+  // 1. Sets loading state.
+  // 2. Sends formData to the backend /optimize_route endpoint.
+  // 3. Updates formData with the reordered stops returned by the backend.
+  // 4. Updates route state with the geometry returned by the backend.
+  // 5. Switches to MapView.
   const optimizeRoute = async () => {
     setIsLoading(true);
     setLoadingMessage('Optimizing...');
@@ -476,6 +484,11 @@ const ExplorePage = () => {
                             />
                           )}
                         </div>
+                        {/* 
+                          PlacesAutocomplete: 
+                          Custom component that handles address search and selection.
+                          Updates the specific stop's location and coordinates in formData.
+                        */}
                         <PlacesAutocomplete
                           value={stop.location}
                           onChange={(value) => {

@@ -2,6 +2,14 @@
 Flask Web Server
 Receives an API-style JSON object, optionally optimizes the route via your RouteOptimizer
 (using an OSRM distance matrix), then returns the reordered stops and route geometry.
+
+Data Flow:
+1. Client sends a list of stops + config (fuel, maintainOrder).
+2. Server calls OSRM Table API to get a distance matrix for all stops.
+3. Server passes matrix to RouteOptimizer (OR-Tools) to find the optimal order (TSP).
+4. Server reorders stops based on optimizer output.
+5. Server calls OSRM Route API to get the final path geometry (lat/lng points) for the map.
+6. Server returns optimized stops, geometry, and stats to client.
 """
 
 from flask import Flask, request, jsonify
@@ -58,7 +66,10 @@ def normalize_stops_for_printing(stops):
 
 
 def format_table_url(stops):
-    """Build OSRM table API URL for a list of stops."""
+    """
+    Build OSRM table API URL for a list of stops.
+    The Table API returns a square matrix of travel times/distances between all pairs of coordinates.
+    """
     coords_list = []
     for s in stops:
         c = s.get("coords")
@@ -69,7 +80,10 @@ def format_table_url(stops):
 
 
 def format_route_url(stops):
-    """Build OSRM route API URL for ordered stops with GeoJSON overview."""
+    """
+    Build OSRM route API URL for ordered stops with GeoJSON overview.
+    The Route API returns the actual path geometry (waypoints) to draw on the map.
+    """
     coords_list = [f"{s['coords']['lng']},{s['coords']['lat']}" for s in stops]
     return f"{config.OSRM_HOST}/route/v1/driving/{';'.join(coords_list)}?overview=full&geometries=geojson&steps=false"
 
@@ -83,6 +97,27 @@ def health_check():
 
 @app.route("/optimize_route", methods=["POST"])
 def optimize_route():
+    """
+    Main optimization endpoint.
+    
+    Expected JSON Payload:
+    {
+        "stops": [
+            {"location": "Address 1", "coords": {"lat": ..., "lng": ...}},
+            ...
+        ],
+        "maintainOrder": boolean,  # If true, skips optimization
+        "currentFuel": float       # MPG for cost calculation
+    }
+
+    Returns:
+    {
+        "optimizedStops": [...],   # Reordered list of stops
+        "routeGeometry": [[lat, lng], ...], # Polyline points for map
+        "distance": float,         # Total distance in meters
+        "duration": float          # Total duration in seconds
+    }
+    """
     if optimizer is None:
         return jsonify({"error": "Optimizer is not initialized. Check server logs."}), 500
 

@@ -67,8 +67,9 @@ const calculateRouteDistance = (route: number[][]) => {
  * - route: Array of lat/lng tuples representing the route
  *
  * Behavior:
- * - If a route is provided, fit the map to its bounds.
+ * - If a route is provided, fit the map to its bounds (showing the full path).
  * - Otherwise, fit the map to the bounds defined by the start and end coordinates.
+ * - This component is a "headless" map component that uses the useMap hook.
  */
 const MapController = ({ startCoords, endCoords, route }: any) => {
   const map = useMap();
@@ -201,6 +202,10 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
     : '0';
 
   // Calculate emissions using a fixed emission rate
+  // Logic:
+  // 1. Estimate optimized distance (currently mocked as 85% of original).
+  // 2. Calculate emissions based on distance * factor (0.12 kg/km).
+  // 3. Calculate savings.
   const emissionsPerKm = 0.12; // kg CO2 per km (example value)
   const totalEmissions =
     Math.round(optimizedDistance * emissionsPerKm * 10) / 10;
@@ -537,6 +542,8 @@ const AnalyticsPanel = ({ isOpen, onClose, route, formData }: any) => {
  * - startCoords: Coordinates of the route start point
  * - endCoords: Coordinates of the route end point
  * - onBack: Function to navigate back to the previous UI step
+ * 
+ * Note: The map uses OpenStreetMap tiles via CartoDB.
  */
 const MapView = ({ formData, route, startCoords, endCoords, onBack }: any) => {
   const [isAnalyticsPanelOpen, setIsAnalyticsPanelOpen] = useState(false);
