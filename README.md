@@ -1,7 +1,5 @@
 # Asphalt - Smarter Routes, Greener Future
 
-![Asphalt Banner](frontend/public/images/image.png)
-
 **Asphalt** is a comprehensive route optimization platform designed to make transportation smarter and more eco-friendly. By leveraging spatial data and advanced algorithms, Asphalt helps users visualize infrastructure, analyze bottlenecks, and plan the most efficient paths to minimize fuel consumption and emissions.
 
 ## Features
@@ -26,7 +24,6 @@ Asphalt is a web application for route optimization, focusing on reducing fuel c
 3.  **Distance Matrix**: Backend requests a distance matrix from OSRM.
 4.  **Optimization**: Backend uses Google OR-Tools to solve the Traveling Salesperson Problem (TSP) based on the distance matrix.
 5.  **Route Geometry**: Backend requests the final route geometry from OSRM for the optimized order.
-    *   *Note: This is necessary to get the actual driving route (polyline) instead of simply the reordered list of stops.*
 6.  **Visualization**: Backend returns optimized stops and geometry to Frontend, which renders them on a map (`MapView`).
 
 ## Backend Architecture
@@ -166,27 +163,3 @@ npm install
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Configuration
-
-### Environment Variables
-
-**Backend (`backend/app/config.py` or env vars):**
-- `FLASK_PORT`: Port to run the Flask server (default: `8000`).
-- `OSRM_HOST`: URL of the OSRM instance (default: `http://100.30.34.94:5000`).
-
-**Frontend:**
-- Create a `.env.local` file in the `frontend` directory if you need to override default API URLs or add keys (e.g., Google Maps API key).
-
-## Documentation
-
-- [API Documentation](docs/API.md): Detailed reference for the backend API endpoints.
-- [Architecture Overview](docs/ARCHITECTURE.md): High-level explanation of how the system components fit together.
-- [Testing Guide](docs/TESTING.md): Instructions for running unit tests and load tests.
-
-## Deployment
-
-This project is configured for deployment on **Render**. The `render.yaml` file in the root directory defines the services:
-
-1.  **Web Service (Backend)**: Python/Flask app running with Gunicorn.
-2.  **Web Service (Frontend)**: (Configuration typically added here or deployed as a Static Site/Node app).
