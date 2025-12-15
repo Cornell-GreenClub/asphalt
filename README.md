@@ -12,6 +12,90 @@
 - **Data-Driven Insights**: Identify traffic bottlenecks and alternative routes.
 - **Responsive Design**: A modern, responsive user interface built with Next.js and Tailwind CSS.
 
+## System Overview
+
+Asphalt is a web application for route optimization, focusing on reducing fuel consumption and emissions. It consists of:
+- **Frontend**: A Next.js application (React) using Tailwind CSS for styling and Leaflet for maps.
+- **Backend**: A Flask (Python) server that handles route optimization logic.
+- **Routing Engine**: Integrates with OSRM (Open Source Routing Machine) for distance matrices and route geometry.
+
+## High-Level Data Flow
+
+1.  **User Input**: User enters stops in the Frontend (`ExplorePage`).
+2.  **Optimization Request**: Frontend sends stops to Backend (`/optimize_route`).
+3.  **Distance Matrix**: Backend requests a distance matrix from OSRM.
+4.  **Optimization**: Backend uses Google OR-Tools to solve the Traveling Salesperson Problem (TSP) based on the distance matrix.
+5.  **Route Geometry**: Backend requests the final route geometry from OSRM for the optimized order.
+    *   *Note: This is necessary to get the actual driving route (polyline) instead of simply the reordered list of stops.*
+6.  **Visualization**: Backend returns optimized stops and geometry to Frontend, which renders them on a map (`MapView`).
+
+## Backend Architecture
+
+The backend is a lightweight Flask wrapper around an optimization engine.
+
+### Key Files
+
+#### `app/app.py`
+The entry point for the Flask server.
+
+**Endpoints:**
+-   `GET /health`: Simple health check.
+    -   Called immediately when the application is opened.
+    -   **Purpose**: Starts the render wake-up process to reduce wait time when "Optimize Route" is actually called.
+-   `POST /optimize_route`: The main endpoint.
+    -   **Input**: JSON with `stops` (list of locations/coords), `currentFuel`, `maintainOrder` flag.
+    -   **Process**:
+        1.  Validates input.
+        2.  If `maintainOrder` is `false`, calls `RouteOptimizer` to reorder stops.
+        3.  Fetches route geometry from OSRM for the final actual driving route.
+        4.  Calculates total distance and duration.
+    -   **Output**: JSON with `optimizedStops`, `routeGeometry` (lat/lng array), `distance`, and `duration`.
+
+#### `app/route_optimizer.py`
+Contains the core logic for solving the routing problem.
+
+**Class `RouteOptimizer`:**
+-   `optimize_route(api_response, mpg)`:
+    -   Takes OSRM distance matrix (`api_response`).
+    -   Uses `ortools.constraint_solver` to solve the TSP.
+    -   Optimizes for **shortest distance**.
+-   `_solve_tsp`:
+    -   Configures and runs the OR-Tools solver with `GUIDED_LOCAL_SEARCH` strategy.
+-   `_calculate_and_print_costs`:
+    -   Compares the original vs. optimized route in terms of distance (km) and fuel usage (gallons), logging the savings.
+
+## Frontend Architecture
+
+The frontend is a modern Next.js 15 application using the App Router.
+
+### Key Files
+
+#### `src/app/layout.tsx`
+The root layout file.
+-   Sets up global fonts (Poppins).
+-   Includes `BackendWakeup` component to ensure the backend is ready.
+-   Includes Vercel Analytics.
+
+#### `src/app/page.tsx`
+The Landing Page.
+-   Features a "Hero" section with a call to action ("Explore Routes").
+-   Explains the value proposition: Visualize, Analyze, Optimize.
+-   Showcases sustainability and data-driven benefits.
+
+#### `src/app/explore/page.tsx` (`ExplorePage`)
+The main functional page for route planning.
+-   **State Management**: Handles `formData` (stops, fuel info), `route` data, and view state (`isMapView`).
+-   **`optimizeRoute`**:
+    -   Sends a POST request to the backend.
+    -   Updates state with the optimized route and geometry.
+    -   Switches view to `MapView`.
+
+#### `src/app/explore/MapView.tsx`
+The interactive map component.
+-   **MapView**: Main container. Renders `MapContainer`, `TileLayer`, `Marker`s, and `Polyline` (route path).
+-   **MapController**: Automatically fits map bounds to show the route.
+-   **Legend**: Explains marker colors (Blue=Start/End, Orange=Intermediate).
+
 ## Tech Stack
 
 ### Frontend
