@@ -1,6 +1,6 @@
-# PathOS Technical Documentation
+# PathOS
 
-PathOS is a sophisticated web application designed for **route optimization**, specifically engineered to reduce fuel consumption and environmental emissions. By leveraging advanced combinatorial optimization and real-time map data, PathOS provides users with the most efficient paths for their journeys.
+PathOS is a web application designed for **route optimization**, specifically engineered to reduce fuel consumption and environmental emissions. By leveraging advanced optimization and real-time map data, PathOS provides users with the most efficient paths for their journeys.
 
 ---
 
