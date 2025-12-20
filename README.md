@@ -1,165 +1,90 @@
-# Asphalt - Smarter Routes, Greener Future
+# PathOS Technical Documentation
 
-**Asphalt** is a comprehensive route optimization platform designed to make transportation smarter and more eco-friendly. By leveraging spatial data and advanced algorithms, Asphalt helps users visualize infrastructure, analyze bottlenecks, and plan the most efficient paths to minimize fuel consumption and emissions.
+PathOS is a sophisticated web application designed for **route optimization**, specifically engineered to reduce fuel consumption and environmental emissions. By leveraging advanced combinatorial optimization and real-time map data, PathOS provides users with the most efficient paths for their journeys.
 
-## Features
+---
 
-- **Interactive Map Visualization**: Explore transportation networks with detailed map views using Leaflet and Google Maps.
-- **Route Optimization**: Intelligent routing algorithms (TSP) to reorder stops for maximum efficiency.
-- **Eco-Friendly Analysis**: Calculate potential fuel savings and emission reductions.
-- **Data-Driven Insights**: Identify traffic bottlenecks and alternative routes.
-- **Responsive Design**: A modern, responsive user interface built with Next.js and Tailwind CSS.
+## 1. System Overview
 
-## System Overview
+The platform is built on a modern, three-tier architecture:
 
-Asphalt is a web application for route optimization, focusing on reducing fuel consumption and emissions. It consists of:
-- **Frontend**: A Next.js application (React) using Tailwind CSS for styling and Leaflet for maps.
-- **Backend**: A Flask (Python) server that handles route optimization logic.
-- **Routing Engine**: Integrates with OSRM (Open Source Routing Machine) for distance matrices and route geometry.
+* **Frontend**: A responsive **Next.js 15** application (React) styled with **Tailwind CSS** and featuring interactive mapping via **Leaflet**.
+* **Backend**: A **Flask** (Python) REST API that houses the core optimization logic.
+* **Routing Engine**: An **OSRM (Open Source Routing Machine)** instance that provides high-performance distance matrices and precise route geometry.
 
-## High-Level Data Flow
+---
 
-1.  **User Input**: User enters stops in the Frontend (`ExplorePage`).
-2.  **Optimization Request**: Frontend sends stops to Backend (`/optimize_route`).
-3.  **Distance Matrix**: Backend requests a distance matrix from OSRM.
-4.  **Optimization**: Backend uses Google OR-Tools to solve the Traveling Salesperson Problem (TSP) based on the distance matrix.
-5.  **Route Geometry**: Backend requests the final route geometry from OSRM for the optimized order.
-6.  **Visualization**: Backend returns optimized stops and geometry to Frontend, which renders them on a map (`MapView`).
+## 2. High-Level Data Flow
 
-## Backend Architecture
+The following sequence describes how data moves through the system to generate an optimized route:
 
-The backend is a lightweight Flask wrapper around an optimization engine.
+1.  **User Input**: User enters destinations via the `ExplorePage` in the Frontend.
+2.  **Request**: Frontend sends coordinates to the Backend `/optimize_route` endpoint.
+3.  **Matrix Calculation**: Backend requests a distance matrix from the OSRM server.
+4.  **Optimization**: The Backend uses **Google OR-Tools** to solve the Traveling Salesperson Problem (TSP).
+5.  **Geometry Fetching**: After reordering stops, the Backend requests the specific driving path (geometry) from OSRM.
+6.  **Visualization**: The Frontend receives the optimized order and polyline data, rendering it on the `MapView`.
 
-### Key Files
 
-#### `app/app.py`
-The entry point for the Flask server.
 
-**Endpoints:**
--   `GET /health`: Simple health check.
-    -   Called immediately when the application is opened.
-    -   **Purpose**: Starts the render wake-up process to reduce wait time when "Optimize Route" is actually called.
--   `POST /optimize_route`: The main endpoint.
-    -   **Input**: JSON with `stops` (list of locations/coords), `currentFuel`, `maintainOrder` flag.
-    -   **Process**:
-        1.  Validates input.
-        2.  If `maintainOrder` is `false`, calls `RouteOptimizer` to reorder stops.
-        3.  Fetches route geometry from OSRM for the final actual driving route.
-        4.  Calculates total distance and duration.
-    -   **Output**: JSON with `optimizedStops`, `routeGeometry` (lat/lng array), `distance`, and `duration`.
+---
 
-#### `app/route_optimizer.py`
-Contains the core logic for solving the routing problem.
+## 3. Backend Architecture
 
-**Class `RouteOptimizer`:**
--   `optimize_route(api_response, mpg)`:
-    -   Takes OSRM distance matrix (`api_response`).
-    -   Uses `ortools.constraint_solver` to solve the TSP.
-    -   Optimizes for **shortest distance**.
--   `_solve_tsp`:
-    -   Configures and runs the OR-Tools solver with `GUIDED_LOCAL_SEARCH` strategy.
--   `_calculate_and_print_costs`:
-    -   Compares the original vs. optimized route in terms of distance (km) and fuel usage (gallons), logging the savings.
+The backend is a lightweight Flask wrapper around a powerful optimization engine.
 
-## Frontend Architecture
+### Key Files & Endpoints
+* **`app/app.py`**: The primary entry point.
+    * `GET /health`: Used as a "warm-up" signal to wake up the Render instance when a user first lands on the site.
+    * `POST /optimize_route`: The main processing hub. Validates input, triggers the optimizer, and returns distance, duration, and geometry.
+* **`app/route_optimizer.py`**: Contains the `RouteOptimizer` class.
+    * **Logic**: Uses `ortools.constraint_solver` with a `GUIDED_LOCAL_SEARCH` strategy.
+    * **Savings Analysis**: Automatically calculates and logs the distance and fuel saved compared to the original input order.
 
-The frontend is a modern Next.js 15 application using the App Router.
+---
 
-### Key Files
+## 4. Frontend Architecture
 
-#### `src/app/layout.tsx`
-The root layout file.
--   Sets up global fonts (Poppins).
--   Includes `BackendWakeup` component to ensure the backend is ready.
--   Includes Vercel Analytics.
+Built using the **Next.js App Router**, the frontend focuses on performance and user experience.
 
-#### `src/app/page.tsx`
-The Landing Page.
--   Features a "Hero" section with a call to action ("Explore Routes").
--   Explains the value proposition: Visualize, Analyze, Optimize.
--   Showcases sustainability and data-driven benefits.
+### Core Components
+* **`layout.tsx`**: Sets the global theme (Poppins font) and includes the `BackendWakeup` component to trigger early server spin-up.
+* **`explore/page.tsx`**: The mission control for route planning. Manages form state, fuel parameters, and view toggling.
+* **`explore/MapView.tsx`**: An interactive Leaflet-based map.
+    * **MapController**: Logic to auto-zoom/pan to the generated route.
+    * **Legend**: Distinguishes between start/end points (Blue) and waypoints (Orange).
 
-#### `src/app/explore/page.tsx` (`ExplorePage`)
-The main functional page for route planning.
--   **State Management**: Handles `formData` (stops, fuel info), `route` data, and view state (`isMapView`).
--   **`optimizeRoute`**:
-    -   Sends a POST request to the backend.
-    -   Updates state with the optimized route and geometry.
-    -   Switches view to `MapView`.
+> [!NOTE]
+> The contact page (`/contact/page.tsx`) currently requires integration with a Google Sheets/AppScript backend to be fully functional.
 
-#### `src/app/explore/MapView.tsx`
-The interactive map component.
--   **MapView**: Main container. Renders `MapContainer`, `TileLayer`, `Marker`s, and `Polyline` (route path).
--   **MapController**: Automatically fits map bounds to show the route.
--   **Legend**: Explains marker colors (Blue=Start/End, Orange=Intermediate).
+---
 
-## Tech Stack
+## 5. Hosting & Infrastructure
 
-### Frontend
-- **Framework**: [Next.js 15](https://nextjs.org/) (React 19)
-- **Language**: TypeScript
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Maps**: [Leaflet](https://leafletjs.com/), [React Leaflet](https://react-leaflet.js.org/), Google Maps API
-- **Icons**: Lucide React, React Icons
-- **Charts**: Recharts
+| Component | Provider | Notes |
+| :--- | :--- | :--- |
+| **Frontend** | Vercel | Next.js deployment with built-in analytics. |
+| **Backend** | Render | Free tier hosting. Subject to "cold starts" (mitigated by health-check). |
+| **Routing (OSRM)** | AWS EC2 | Hosted on a `t3.large` instance (New York State dataset). |
 
-### Backend
-- **Framework**: [Flask](https://flask.palletsprojects.com/) (Python)
-- **Optimization**: [Google OR-Tools](https://developers.google.com/optimization)
-- **Routing Engine**: [OSRM](http://project-osrm.org/) (Open Source Routing Machine)
-- **Server**: Gunicorn
+### Cost & Optimization Strategy
+* **Resource Management**: OSRM requires significant RAM; a `t3.medium` was insufficient for the NYS dataset.
+* **Scaling**: Current AWS resources are paused/deleted during inactive periods (like winter break) to eliminate the ~$1/day idle cost.
+* **Future Roadmap**: Transition OSRM management to **API Gateway + AWS Lambda** to programmatically trigger the EC2 instance only when active users are detected.
 
-### Deployment
-- **Platform**: [Render](https://render.com/)
-- **Configuration**: Infrastructure as Code via `render.yaml`
+---
 
-## Prerequisites
+## 6. Testing & Validation
 
-Before you begin, ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v18 or higher)
-- [Python](https://www.python.org/) (v3.8 or higher)
-- [pip](https://pip.pypa.io/en/stable/)
+PathOS includes three distinct testing layers to ensure reliability and proof of value:
 
-## Getting Started
+1.  **Integration Testing** (`unit_test.py`): Validates the full API handshake using real-world Ithaca, NY coordinates.
+2.  **Load Testing** (`locustfile.py`): Uses **Locust** to simulate concurrent users and measure system stability under pressure.
+3.  **Savings Verification** (`calculate_sample_savings.py`): A specialized script that compares baseline routes against optimized versions to quantify actual fuel and distance reduction.
 
-### 1. Clone the Repository
+---
 
-```bash
-git clone https://github.com/yourusername/asphalt.git
-cd asphalt
-```
-
-### 2. Backend Setup
-
-The backend handles route optimization logic.
-
-```bash
-cd backend/app
-
-# Create a virtual environment (optional but recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the server
-python app.py
-```
-The backend will start on `http://localhost:8000` (or the port defined in `config.py`).
-
-### 3. Frontend Setup
-
-The frontend provides the user interface.
-
-```bash
-# Open a new terminal window
-cd frontend
-
-# Install dependencies
-npm install
-
-# Run the development server
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 7. Resources & References
+* [OSRM Backend GitHub](https://github.com/Project-OSRM/osrm-backend)
+* [Google OR-Tools VRP/TSP Solver](https://developers.google.com/optimization/routing/tsp)
+* [Guide: Getting Started with OSRM](https://medium.com/ula-engineering/getting-started-with-osrm-a-guide-1854891fff11)
