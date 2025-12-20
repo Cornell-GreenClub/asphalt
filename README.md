@@ -1,6 +1,6 @@
-# PathOS
+# pathOS
 
-PathOS is a web application designed for **route optimization**, specifically engineered to reduce fuel consumption and environmental emissions. By leveraging advanced optimization and real-time map data, PathOS provides users with the most efficient paths for their journeys.
+pathOS is a web application designed for **route optimization**, specifically engineered to reduce fuel consumption and environmental emissions. By leveraging advanced optimization and real-time map data, PathOS provides users with the most efficient paths for their journeys.
 
 ---
 
@@ -84,7 +84,22 @@ PathOS includes three distinct testing layers to ensure reliability and proof of
 
 ---
 
-## 7. Resources & References
-* [OSRM Backend GitHub](https://github.com/Project-OSRM/osrm-backend)
-* [Google OR-Tools VRP/TSP Solver](https://developers.google.com/optimization/routing/tsp)
-* [Guide: Getting Started with OSRM](https://medium.com/ula-engineering/getting-started-with-osrm-a-guide-1854891fff11)
+## 7. OSRM Setup
+
+To set up your local OSRM server (downloading and processing map data), please follow the [official OSRM Backend Guide](https://github.com/Project-OSRM/osrm-backend).
+
+**Crucial Configuration for pathOS:**
+When running the final `osrm-routed` command, you **must expose port 5000** to allow the Flask backend to connect.
+
+```bash
+# Ensure -p 5000:5000 is included
+docker run -d -t -i -p 5000:5000 -v "${PWD}:/data" ghcr.io/project-osrm/osrm-backend osrm-routed --algorithm mld /data/your-map-data.osrm
+```
+
+**Verify Connection:**
+Run the integration test to confirm the backend can reach your local OSRM instance:
+
+```bash
+cd backend/testing
+python3 unit_test.py
+```
